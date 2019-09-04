@@ -46,5 +46,5 @@ PNG will suffer from artifact problem after scaling:
 
 ### Algorithm
 This application use "wall follower maze solving algorithm" to draw the marker, and it is useful to avoid some problems.
-<img src="https://user-images.githubusercontent.com/6807005/64227518-65766980-cf16-11e9-9378-33e3995e72c7.jpg" height="400" />
+<img src="https://user-images.githubusercontent.com/6807005/64232926-8a260d80-cf25-11e9-9b92-eec447395c9a.jpg" height="400" />
 
