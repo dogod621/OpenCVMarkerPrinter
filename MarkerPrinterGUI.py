@@ -313,7 +313,7 @@ class MarkerPrinterGUI:
 
         #
         try:
-            arucoGridBoard = aruco.GridBoard_create(markersX, markersY, markerLength, markerSeparation, arucoDict)
+            arucoGridBoard = aruco.GridBoard_create(markersX, markersY, markerLength, markerSeparation, arucoDict, firstMarker = firstMarker)
             image = MarkerPrinter.PreviewArucoGridMarkerImage(arucoGridBoard, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter))))
             tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
             self.arucoGridMarkerImageLabel.imgtk = tkImage
