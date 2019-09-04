@@ -7,15 +7,15 @@ This small app can save some commonly used opencv markers such as ArUco, Chessbo
 
 ### Dependencies
 **MarkerPrinter:**  
-numpy,  
-opencv-python,  
-opencv-contrib-python,  
-cairo(for drawing vector graphic),  
-cairosvg(for svg to png)  
+  * numpy,  
+  * opencv-python,  
+  * opencv-contrib-python,  
+  * cairo(for drawing vector graphic),  
+  * cairosvg(for svg to png)  
 
 **MarkerPrinterGUI:**  
-tkinter(for GUI),  
-PIL(Pillow, for image processing)  
+  * tkinter(for GUI),  
+  * PIL(Pillow, for image processing)  
 
 ## Tutorial
 ### Seletct dictionary:
