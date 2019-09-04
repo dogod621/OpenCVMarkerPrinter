@@ -6,7 +6,7 @@ Support vector graphics file format: .svg, .pdf, .ps
 Support image file format: .png (not recommend)
 
 Current pattern generator apps is not good enough, for example: calib.io can not modify all of the parameters.
-<img src="https://user-images.githubusercontent.com/6807005/64223512-e0d01f00-cf06-11e9-8a47-962b0501eed5.jpg" width="whatever" height="400" />
+<img src="https://user-images.githubusercontent.com/6807005/64223512-e0d01f00-cf06-11e9-8a47-962b0501eed5.jpg" width="whatever" height="200" />
 ![0001](https://user-images.githubusercontent.com/6807005/64223512-e0d01f00-cf06-11e9-8a47-962b0501eed5.jpg | width=300)
 
 Ours application can modify all of the parameters.
