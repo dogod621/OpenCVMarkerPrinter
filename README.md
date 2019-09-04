@@ -40,6 +40,11 @@ Since if you are using consumer level printer, you will suffer from not able pri
 <img src="https://user-images.githubusercontent.com/6807005/64227516-65766980-cf16-11e9-86c5-a5e6c91006f3.jpg" width="whatever" height="400" />
 
 ## Note:
+### Why PNG is not recommend
+PNG will suffer from artifact problem after scaling:
+<img src="https://user-images.githubusercontent.com/6807005/64232240-2a7b3280-cf24-11e9-80e1-2390d97146f1.jpg" width="whatever" height="200" />
+
+### Algorithm
 This application use "wall follower maze solving algorithm" to draw the marker, and it is useful to avoid some problems.
 <img src="https://user-images.githubusercontent.com/6807005/64227518-65766980-cf16-11e9-9378-33e3995e72c7.jpg" width="whatever" height="400" />
 
