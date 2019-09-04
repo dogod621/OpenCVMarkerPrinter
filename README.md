@@ -29,4 +29,5 @@ Since if you are using consumer level printer, you cannot print too large marker
 
 ## Note:
 This application use "wall follower maze solving algorithm" to draw the marker, and it is useful to avoid some problems.
-<img src="https://user-images.githubusercontent.com/6807005/64225328-84243280-cf0d-11e9-9ee6-2aabc21196d4.jpg" width="whatever" height="200" />
+<img src="https://user-images.githubusercontent.com/6807005/64225708-20026e00-cf0f-11e9-9141-a2b014a6fbfc.jpg" width="whatever" height="400" />
+
