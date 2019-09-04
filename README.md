@@ -12,8 +12,16 @@ Can modify all of the parameters.
 <img src="https://user-images.githubusercontent.com/6807005/64225418-eda44100-cf0d-11e9-95a1-424f18205a26.jpg" width="whatever" height="200" />
 
 ### Dependencies
-MarkerPrinter: numpy, opencv-python, opencv-contrib-python, cairo(drawing vector graphic), cairosvg(svg to png)
-MarkerPrinterGUI: tkinter, PIL(Pillow)
+**MarkerPrinter:**
+numpy,  
+opencv-python,  
+opencv-contrib-python,  
+cairo(for drawing vector graphic),  
+cairosvg(for svg to png)  
+
+**MarkerPrinterGUI:**
+tkinter(for GUI),  
+PIL(Pillow, for image processing)  
 
 ## Tutorial
 ### Seletct dictionary:
