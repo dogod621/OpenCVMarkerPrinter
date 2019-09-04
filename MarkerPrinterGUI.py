@@ -23,7 +23,7 @@ class MarkerPrinterGUI:
 
     def OnShowingHelpGithub(self):
         messagebox.showinfo("Github", 
-            "")
+            "https://github.com/dogod621/OpenCVMarkerPrinter")
 
     def OnCloseWindow(self):
         if(self.window is not None):
