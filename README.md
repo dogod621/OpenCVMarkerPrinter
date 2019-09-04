@@ -36,7 +36,7 @@ PIL(Pillow, for image processing)
 
 ## Useful Options:
 ### Divde output to chunks
-Since if you are using consumer level printer, you will suffer from not able printing too large marker, so just set subSize before saving the marker to files, it will divide output marker to chunks.
+If you are using consumer level printer, you will suffer from not able printing too large marker, so just set subSize before saving the marker to files, it will divide output marker to chunks.
 <img src="https://user-images.githubusercontent.com/6807005/64227516-65766980-cf16-11e9-86c5-a5e6c91006f3.jpg" height="400" />
 
 ## Note:
