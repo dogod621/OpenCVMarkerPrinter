@@ -234,6 +234,220 @@ class MarkerPrinterGUI:
 
         self.OnSelectCharucoMarkerDictionary("DICT_ARUCO_ORIGINAL")
 
+    def OnSelectArucoGridMarkerDictionary(self, pDictName):
+        self.arucoGridMarkerDictionaryStr.set(pDictName)
+
+    def OnPreviewOrSaveArucoGridMarker(self, askSave = False):
+        markersX = None
+        try:
+            markersX = int(self.arucoGridMarkerMarkersXStr.get())
+        except:
+            messagebox.showinfo("Error", "markersX is not valid")
+            return
+
+        markersY = None
+        try:
+            markersY = int(self.arucoGridMarkerMarkersYStr.get())
+        except:
+            messagebox.showinfo("Error", "markersY is not valid")
+            return
+
+        markerLength = None
+        try:
+            markerLength = float(self.arucoGridMarkerMarkerLengthStr.get())
+        except:
+            messagebox.showinfo("Error", "markerLength is not valid")
+            return
+
+        markerSeparation = None
+        try:
+            markerSeparation = float(self.arucoGridMarkerMarkerSeparationStr.get())
+        except:
+            messagebox.showinfo("Error", "markerSeparation is not valid")
+            return
+
+        borderBits = None
+        try:
+            borderBits = int(self.arucoGridMarkerBorderBitsStr.get())
+        except:
+            messagebox.showinfo("Error", "borderBits is not valid")
+            return
+
+        firstMarker = None
+        try:
+            firstMarker = int(self.arucoGridMarkerFirstMarkerStr.get())
+        except:
+            messagebox.showinfo("Error", "firstMarker is not valid")
+            return
+
+        arucoDict = aruco.Dictionary_get(self.dictList[self.arucoGridMarkerDictionaryStr.get()])
+
+        # check
+        if(markersX <= 1):
+            messagebox.showinfo("Error", "markersX <= 1")
+            return
+
+        if(markersY <= 1):
+            messagebox.showinfo("Error", "markersY <= 1")
+            return
+
+        if(markerLength <= 0):
+            messagebox.showinfo("Error", "markerLength <= 0")
+            return
+
+        if(markerSeparation <= 0):
+            messagebox.showinfo("Error", "markerSeparation <= 0")
+            return
+
+        if(firstMarker < 0):
+            messagebox.showinfo("Error", "firstMarker < 0")
+            return
+
+        if(arucoDict.bytesList.shape[0] < (( markersX * markersY ) + firstMarker)):
+            messagebox.showinfo("Error", "aruce dictionary is not enough for your board size and firstMarker")
+            return
+
+        if(borderBits <= 0):
+            messagebox.showinfo("Error", "borderBits <= 0")
+            return
+
+        #
+        try:
+            arucoGridBoard = aruco.GridBoard_create(markersX, markersY, markerLength, markerSeparation, arucoDict)
+            image = MarkerPrinter.PreviewArucoGridMarkerImage(arucoGridBoard, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter))))
+            tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
+            self.arucoGridMarkerImageLabel.imgtk = tkImage
+            self.arucoGridMarkerImageLabel.config(image=tkImage)
+        except:
+            messagebox.showinfo("Error", "create marker failed")
+            return
+
+        if(askSave):
+            subSizeX = None
+            try:
+                subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
+            except:
+                messagebox.showinfo("Error", "subSizeX is not valid")
+                return
+
+            subSizeY = None
+            try:
+                subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
+            except:
+                messagebox.showinfo("Error", "subSizeY is not valid")
+                return
+
+            # check
+            if(subSizeX < 0):
+                messagebox.showinfo("Error", "subSizeX < 0")
+                return
+
+            if(subSizeY < 0):
+                messagebox.showinfo("Error", "subSizeY < 0")
+                return
+
+            #
+            subSize = None
+
+            if(subSizeX > 0):
+                if(subSizeY > 0):
+                    subSize = (subSizeX, subSizeY)
+                else:
+                    subSize = (subSizeX, sizeY)
+            else:
+                if(subSizeY > 0):
+                    subSize = (sizeX, subSizeY)
+                else:
+                    subSize = None
+
+            try:
+                askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
+                    ("scalable vector graphics files","*.svg"), \
+                    ("portable document format files","*.pdf"), \
+                    ("post script files","*.ps"),\
+                    ("portable network graphics files","*.png")),
+                    defaultextension="*.*")
+
+                if (askFileName):
+                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, arucoGridBoard, borderBits=borderBits, subSize=subSize)
+            except:
+                messagebox.showinfo("Error", "save marker failed")
+                return
+        
+    def OnPreviewArucoGridMarker(self):
+        self.OnPreviewOrSaveArucoGridMarker(askSave = False)
+
+    def OnSaveArucoGridMarker(self):
+        self.OnPreviewOrSaveArucoGridMarker(askSave = True)
+
+    def InitArucoGridMarkerTab(self):
+        self.arucoGridMarkerUIFrame = ttk.Frame(self.arucoGridMarkerTab)  
+        self.arucoGridMarkerImageTab = ttk.Frame(self.arucoGridMarkerTab)  
+        self.arucoGridMarkerUIFrame2 = ttk.Frame(self.arucoGridMarkerTab)  
+
+        self.arucoGridMarkerUIFrame.grid(row=0, column=0, sticky = tk.NSEW)
+        self.arucoGridMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
+        self.arucoGridMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
+
+        #
+        self.arucoGridMarkerImageLabel = tk.Label(self.arucoGridMarkerImageTab)  
+        self.arucoGridMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
+
+        tk.Label(self.arucoGridMarkerUIFrame, text="dictionary").grid(row=0, column=0, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="markersX").grid(row=0, column=1, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="markersY").grid(row=0, column=2, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="markerLength (Unit: Meter)").grid(row=0, column=3, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="markerSeparation (Unit: Meter)").grid(row=0, column=4, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="firstMarker").grid(row=0, column=5, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame, text="borderBits").grid(row=0, column=6, sticky = tk.NSEW)
+        
+        self.arucoGridMarkerDictionaryStr = tk.StringVar()
+        self.arucoGridMarkerMarkersXStr = tk.StringVar()
+        self.arucoGridMarkerMarkersXStr.set("16")
+        self.arucoGridMarkerMarkersYStr = tk.StringVar()
+        self.arucoGridMarkerMarkersYStr.set("9")
+        self.arucoGridMarkerMarkerLengthStr = tk.StringVar()
+        self.arucoGridMarkerMarkerLengthStr.set("0.07")
+        self.arucoGridMarkerMarkerSeparationStr = tk.StringVar()
+        self.arucoGridMarkerMarkerSeparationStr.set("0.02")
+        self.arucoGridMarkerFirstMarkerStr = tk.StringVar()
+        self.arucoGridMarkerFirstMarkerStr.set("0")
+        self.arucoGridMarkerBorderBitsStr = tk.StringVar()
+        self.arucoGridMarkerBorderBitsStr.set("1")
+
+        self.arucoGridMarkerDictionaryMenue = tk.OptionMenu(self.arucoGridMarkerUIFrame, self.arucoGridMarkerDictionaryStr, "DICT_ARUCO_ORIGINAL", command = self.OnSelectArucoGridMarkerDictionary)
+        self.arucoGridMarkerDictionaryMenue.grid(row=1, column=0, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerMarkersXStr).grid(row=1, column=1, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerMarkersYStr).grid(row=1, column=2, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerMarkerLengthStr).grid(row=1, column=3, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerMarkerSeparationStr).grid(row=1, column=4, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerFirstMarkerStr).grid(row=1, column=5, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame, textvariable=self.arucoGridMarkerBorderBitsStr).grid(row=1, column=6, sticky = tk.NSEW)
+
+        tk.Button(self.arucoGridMarkerUIFrame2, text = "Preview", command = self.OnPreviewArucoGridMarker).grid(row=1, column=0, sticky = tk.NSEW)
+        tk.Button(self.arucoGridMarkerUIFrame2, text = "Save", command = self.OnSaveArucoGridMarker).grid(row=1, column=1, sticky = tk.NSEW)
+
+        tk.Label(self.arucoGridMarkerUIFrame2, text="Save opetions:").grid(row=0, column=2, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="(set 0 as disable)").grid(row=1, column=2, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="subSizeX").grid(row=0, column=3, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
+
+        self.arucoGridMarkerSaveSubSizeXStr = tk.StringVar()
+        self.arucoGridMarkerSaveSubSizeXStr.set("0")
+        self.arucoGridMarkerSaveSubSizeYStr = tk.StringVar()
+        self.arucoGridMarkerSaveSubSizeYStr.set("0")
+
+        tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSaveSubSizeXStr).grid(row=1, column=3, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
+
+        self.arucoGridMarkerDictionaryMenue['menu'].delete(0, 'end')
+        for dictName in list(self.dictList.keys()):
+            self.arucoGridMarkerDictionaryMenue['menu'].add_command(label=dictName, command=tk._setit(self.arucoGridMarkerDictionaryStr, dictName, self.OnSelectArucoGridMarkerDictionary))
+
+        self.OnSelectArucoGridMarkerDictionary("DICT_ARUCO_ORIGINAL")
+
     def OnSelectArucoMarkerDictionary(self, pDictName):
         self.arucoMarkerDictionaryStr.set(pDictName)
         
@@ -554,15 +768,18 @@ class MarkerPrinterGUI:
         #
         self.charucoMarkerTab = ttk.Frame(self.notebook)  
         self.arucoMarkerTab = ttk.Frame(self.notebook)  
+        self.arucoGridMarkerTab = ttk.Frame(self.notebook)  
         self.chessMarkerTab = ttk.Frame(self.notebook)
 
-        self.notebook.add(self.charucoMarkerTab, text='CharucoMarker')
-        self.notebook.add(self.arucoMarkerTab, text='ArucoMarker')
-        self.notebook.add(self.chessMarkerTab, text='ChessMarker')
+        self.notebook.add(self.charucoMarkerTab, text='ChArUco Marker')
+        self.notebook.add(self.arucoMarkerTab, text='ArUco Marker')
+        self.notebook.add(self.arucoGridMarkerTab, text='ArUcoGrid Marker')
+        self.notebook.add(self.chessMarkerTab, text='Chessboard Marker')
         
         #
         self.InitCharucoMarkerTab()
         self.InitArucoMarkerTab()
+        self.InitArucoGridMarkerTab()
         self.InitChessMarkerTab()
         
         #

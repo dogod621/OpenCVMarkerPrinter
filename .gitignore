@@ -1,0 +1,10 @@
+__pycache__/
+
+# Visual studio
+*.sdf
+*.sln
+*.suo
+*.pyproj
+*.pyproj.user
+*.pyperf
+*.psess
