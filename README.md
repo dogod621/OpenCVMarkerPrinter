@@ -11,6 +11,10 @@ Not good enough, for example: calib.io can not modify all of the parameters.
 Can modify all of the parameters.  
 <img src="https://user-images.githubusercontent.com/6807005/64225418-eda44100-cf0d-11e9-95a1-424f18205a26.jpg" width="whatever" height="200" />
 
+### Dependencies
+MarkerPrinter: numpy, opencv-python, opencv-contrib-python, cairo(drawing vector graphic), cairosvg(svg to png)
+MarkerPrinterGUI: tkinter, PIL(Pillow)
+
 ## Tutorial
 ### Seletct dictionary:
 <img src="https://user-images.githubusercontent.com/6807005/64223922-38bb5580-cf08-11e9-9f71-d4a71a54cd3e.jpg" width="whatever" height="200" />
