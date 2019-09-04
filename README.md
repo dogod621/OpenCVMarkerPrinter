@@ -1,7 +1,7 @@
 # OpenCVMarkerPrinter
 
 ## Description
-This small app can save some commonly used opencv markers such as ArUco, Chessboard and ChArUco to vector graphics file. **Supported vector graphics file format: .svg, .pdf and .ps. Supported image file format: .png (not recommend).**
+This small app can save some commonly used opencv markers such as ArUco, ArUcoGrid, Chessboard and ChArUco to vector graphics file. **Supported vector graphics file format: .svg, .pdf and .ps. Supported image file format: .png (not recommend).**
 
 <img src="./doc/images/0001.jpg" height="200" />
 
