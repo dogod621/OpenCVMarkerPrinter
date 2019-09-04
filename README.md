@@ -35,8 +35,8 @@ PIL(Pillow, for image processing)
 <img src="https://user-images.githubusercontent.com/6807005/64224139-03633780-cf09-11e9-8a20-823f000da096.jpg" width="whatever" height="200" />
 
 ## Useful Options:
-### Divde output to multi-chuncks
-Since if you are using consumer level printer, you will suffer from not able printing too large marker, so just set subSize before saving the marker to files, it will divide output marker to multi-chuncks files.
+### Divde output to multi-chunks
+Since if you are using consumer level printer, you will suffer from not able printing too large marker, so just set subSize before saving the marker to files, it will divide output marker to multi-chunks files.
 <img src="https://user-images.githubusercontent.com/6807005/64224727-35759900-cf0b-11e9-9e76-33c50f1f8f00.jpg" width="whatever" height="400" />
 
 ## Note:
