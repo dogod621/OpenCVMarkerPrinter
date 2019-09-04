@@ -217,8 +217,8 @@ class MarkerPrinterGUI:
         tk.Label(self.charucoMarkerUIFrame2, text="(set 0 as disable)").grid(row=1, column=2, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame2, text="subSizeX").grid(row=0, column=3, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
-        tk.Label(self.charucoMarkerUIFrame2, text="Divide to multi-chunck, chunck sizeX").grid(row=2, column=3, sticky = tk.NSEW)
-        tk.Label(self.charucoMarkerUIFrame2, text="Divide to multi-chunck, chunck sizeX").grid(row=2, column=4, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
 
         self.charucoMarkerSaveSubSizeXStr = tk.StringVar()
         self.charucoMarkerSaveSubSizeXStr.set("0")
@@ -488,8 +488,8 @@ class MarkerPrinterGUI:
         tk.Label(self.chessMarkerUIFrame2, text="(set 0 as disable)").grid(row=1, column=2, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame2, text="subSizeX").grid(row=0, column=3, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
-        tk.Label(self.chessMarkerUIFrame2, text="Divide to multi-chunck, chunck sizeX").grid(row=2, column=3, sticky = tk.NSEW)
-        tk.Label(self.chessMarkerUIFrame2, text="Divide to multi-chunck, chunck sizeX").grid(row=2, column=4, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
 
         self.chessMarkerSaveSubSizeXStr = tk.StringVar()
         self.chessMarkerSaveSubSizeXStr.set("0")
