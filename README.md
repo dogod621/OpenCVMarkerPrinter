@@ -7,12 +7,11 @@ Support image file format: .png (not recommend)
 
 Current pattern generator apps is not good enough, for example: calib.io can not modify all of the parameters.
 <img src="https://user-images.githubusercontent.com/6807005/64223512-e0d01f00-cf06-11e9-8a47-962b0501eed5.jpg" width="whatever" height="200" />
-![0001](https://user-images.githubusercontent.com/6807005/64223512-e0d01f00-cf06-11e9-8a47-962b0501eed5.jpg | width=300)
 
 Ours application can modify all of the parameters.
-![0002](https://user-images.githubusercontent.com/6807005/64223560-0c530980-cf07-11e9-9d3c-878fad3c9424.jpg | width=300)
-![0003](https://user-images.githubusercontent.com/6807005/64223863-0e699800-cf08-11e9-84ae-37c1b0bee140.jpg | width=300)
-![0004](https://user-images.githubusercontent.com/6807005/64223869-11fd1f00-cf08-11e9-8cf3-5be5fa3e5391.jpg | width=300)
+<img src="https://user-images.githubusercontent.com/6807005/64223560-0c530980-cf07-11e9-9d3c-878fad3c9424.jpg" width="whatever" height="200" />
+<img src="https://user-images.githubusercontent.com/6807005/64223863-0e699800-cf08-11e9-84ae-37c1b0bee140.jpg" width="whatever" height="200" />
+<img src="https://user-images.githubusercontent.com/6807005/64223869-11fd1f00-cf08-11e9-8cf3-5be5fa3e5391.jpg" width="whatever" height="200" />
 
 ## Tutorial
 ###Seletct dictionary:
