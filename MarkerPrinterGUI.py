@@ -22,7 +22,7 @@ class MarkerPrinterGUI:
             return scale0 * 96.0
 
     def OnShowingHelpGithub(self):
-        messagebox.showinfo("Github", 
+        messagebox.showinfo("Github",
             "https://github.com/dogod621/OpenCVMarkerPrinter")
 
     def OnCloseWindow(self):
@@ -171,16 +171,16 @@ class MarkerPrinterGUI:
         self.OnPreviewOrSaveCharucoMarker(askSave = True)
 
     def InitCharucoMarkerTab(self):
-        self.charucoMarkerUIFrame = ttk.Frame(self.charucoMarkerTab)  
-        self.charucoMarkerImageTab = ttk.Frame(self.charucoMarkerTab)  
-        self.charucoMarkerUIFrame2 = ttk.Frame(self.charucoMarkerTab)  
+        self.charucoMarkerUIFrame = ttk.Frame(self.charucoMarkerTab)
+        self.charucoMarkerImageTab = ttk.Frame(self.charucoMarkerTab)
+        self.charucoMarkerUIFrame2 = ttk.Frame(self.charucoMarkerTab)
 
         self.charucoMarkerUIFrame.grid(row=0, column=0, sticky = tk.NSEW)
         self.charucoMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.charucoMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
         #
-        self.charucoMarkerImageLabel = tk.Label(self.charucoMarkerImageTab)  
+        self.charucoMarkerImageLabel = tk.Label(self.charucoMarkerImageTab)
         self.charucoMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
         tk.Label(self.charucoMarkerUIFrame, text="dictionary").grid(row=0, column=0, sticky = tk.NSEW)
@@ -373,7 +373,7 @@ class MarkerPrinterGUI:
             except:
                 messagebox.showinfo("Error", "save marker failed")
                 return
-        
+
     def OnPreviewArucoGridMarker(self):
         self.OnPreviewOrSaveArucoGridMarker(askSave = False)
 
@@ -381,16 +381,16 @@ class MarkerPrinterGUI:
         self.OnPreviewOrSaveArucoGridMarker(askSave = True)
 
     def InitArucoGridMarkerTab(self):
-        self.arucoGridMarkerUIFrame = ttk.Frame(self.arucoGridMarkerTab)  
-        self.arucoGridMarkerImageTab = ttk.Frame(self.arucoGridMarkerTab)  
-        self.arucoGridMarkerUIFrame2 = ttk.Frame(self.arucoGridMarkerTab)  
+        self.arucoGridMarkerUIFrame = ttk.Frame(self.arucoGridMarkerTab)
+        self.arucoGridMarkerImageTab = ttk.Frame(self.arucoGridMarkerTab)
+        self.arucoGridMarkerUIFrame2 = ttk.Frame(self.arucoGridMarkerTab)
 
         self.arucoGridMarkerUIFrame.grid(row=0, column=0, sticky = tk.NSEW)
         self.arucoGridMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.arucoGridMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
         #
-        self.arucoGridMarkerImageLabel = tk.Label(self.arucoGridMarkerImageTab)  
+        self.arucoGridMarkerImageLabel = tk.Label(self.arucoGridMarkerImageTab)
         self.arucoGridMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
         tk.Label(self.arucoGridMarkerUIFrame, text="dictionary").grid(row=0, column=0, sticky = tk.NSEW)
@@ -400,7 +400,7 @@ class MarkerPrinterGUI:
         tk.Label(self.arucoGridMarkerUIFrame, text="markerSeparation (Unit: Meter)").grid(row=0, column=4, sticky = tk.NSEW)
         tk.Label(self.arucoGridMarkerUIFrame, text="firstMarker").grid(row=0, column=5, sticky = tk.NSEW)
         tk.Label(self.arucoGridMarkerUIFrame, text="borderBits").grid(row=0, column=6, sticky = tk.NSEW)
-        
+
         self.arucoGridMarkerDictionaryStr = tk.StringVar()
         self.arucoGridMarkerMarkersXStr = tk.StringVar()
         self.arucoGridMarkerMarkersXStr.set("16")
@@ -450,7 +450,7 @@ class MarkerPrinterGUI:
 
     def OnSelectArucoMarkerDictionary(self, pDictName):
         self.arucoMarkerDictionaryStr.set(pDictName)
-        
+
     def OnPreviewOrSaveArucoMarker(self, askSave = False):
         markerID = None
         try:
@@ -524,23 +524,23 @@ class MarkerPrinterGUI:
         self.OnPreviewOrSaveArucoMarker(askSave = True)
 
     def InitArucoMarkerTab(self):
-        self.arucoMarkerUIFrame = ttk.Frame(self.arucoMarkerTab)  
-        self.arucoMarkerImageTab = ttk.Frame(self.arucoMarkerTab)  
-        self.arucoMarkerUIFrame2 = ttk.Frame(self.arucoMarkerTab)  
+        self.arucoMarkerUIFrame = ttk.Frame(self.arucoMarkerTab)
+        self.arucoMarkerImageTab = ttk.Frame(self.arucoMarkerTab)
+        self.arucoMarkerUIFrame2 = ttk.Frame(self.arucoMarkerTab)
 
         self.arucoMarkerUIFrame.grid(row=0, column=0, sticky = tk.NSEW)
         self.arucoMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.arucoMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
         #
-        self.arucoMarkerImageLabel = tk.Label(self.arucoMarkerImageTab)  
+        self.arucoMarkerImageLabel = tk.Label(self.arucoMarkerImageTab)
         self.arucoMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
         tk.Label(self.arucoMarkerUIFrame, text="dictionary").grid(row=0, column=0, sticky = tk.NSEW)
         tk.Label(self.arucoMarkerUIFrame, text="markerID").grid(row=0, column=1, sticky = tk.NSEW)
         tk.Label(self.arucoMarkerUIFrame, text="markerLength (Unit: Meter)").grid(row=0, column=2, sticky = tk.NSEW)
         tk.Label(self.arucoMarkerUIFrame, text="borderBits").grid(row=0, column=3, sticky = tk.NSEW)
-        
+
         self.arucoMarkerDictionaryStr = tk.StringVar()
         self.arucoMarkerMarkerIDStr = tk.StringVar()
         self.arucoMarkerMarkerIDStr.set("0")
@@ -668,22 +668,22 @@ class MarkerPrinterGUI:
         self.OnPreviewOrSaveChessMarker(askSave = True)
 
     def InitChessMarkerTab(self):
-        self.chessMarkerUIFrame = ttk.Frame(self.chessMarkerTab)  
-        self.chessMarkerImageTab = ttk.Frame(self.chessMarkerTab)  
-        self.chessMarkerUIFrame2 = ttk.Frame(self.chessMarkerTab)  
+        self.chessMarkerUIFrame = ttk.Frame(self.chessMarkerTab)
+        self.chessMarkerImageTab = ttk.Frame(self.chessMarkerTab)
+        self.chessMarkerUIFrame2 = ttk.Frame(self.chessMarkerTab)
 
         self.chessMarkerUIFrame.grid(row=0, column=0, sticky = tk.NSEW)
         self.chessMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.chessMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
         #
-        self.chessMarkerImageLabel = tk.Label(self.chessMarkerImageTab)  
+        self.chessMarkerImageLabel = tk.Label(self.chessMarkerImageTab)
         self.chessMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
         tk.Label(self.chessMarkerUIFrame, text="chessboardSizeX").grid(row=0, column=0, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame, text="chessboardSizeY").grid(row=0, column=1, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame, text="squareLength (Unit: Meter)").grid(row=0, column=2, sticky = tk.NSEW)
-        
+
         self.chessMarkerChessboardSizeXStr = tk.StringVar()
         self.chessMarkerChessboardSizeXStr.set("16")
         self.chessMarkerChessboardSizeYStr = tk.StringVar()
@@ -766,22 +766,22 @@ class MarkerPrinterGUI:
         self.window.config(menu=self.menu)
 
         #
-        self.charucoMarkerTab = ttk.Frame(self.notebook)  
-        self.arucoMarkerTab = ttk.Frame(self.notebook)  
-        self.arucoGridMarkerTab = ttk.Frame(self.notebook)  
+        self.charucoMarkerTab = ttk.Frame(self.notebook)
+        self.arucoMarkerTab = ttk.Frame(self.notebook)
+        self.arucoGridMarkerTab = ttk.Frame(self.notebook)
         self.chessMarkerTab = ttk.Frame(self.notebook)
 
         self.notebook.add(self.charucoMarkerTab, text='ChArUco Marker')
         self.notebook.add(self.arucoMarkerTab, text='ArUco Marker')
         self.notebook.add(self.arucoGridMarkerTab, text='ArUcoGrid Marker')
         self.notebook.add(self.chessMarkerTab, text='Chessboard Marker')
-        
+
         #
         self.InitCharucoMarkerTab()
         self.InitArucoMarkerTab()
         self.InitArucoGridMarkerTab()
         self.InitChessMarkerTab()
-        
+
         #
         self.Update()
         self.window.mainloop()
@@ -798,5 +798,5 @@ class MarkerPrinterGUI:
         messagebox.showinfo("Note", "You closed the debug mode")
         MarkerPrinter.debugMode = None
 
-if __name__ == '__main__':   
+if __name__ == '__main__':
     MarkerPrinterGUI()

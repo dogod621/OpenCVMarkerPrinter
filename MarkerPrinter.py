@@ -30,12 +30,12 @@ class MarkerPrinter:
             ".PS": ".ps" }
 
     #
-    def __DrawBlock(context, 
-                  dictionary = None, markerLength = None, borderBits = 1, 
-                  chessboardSize = (1, 1), squareLength = None, firstMarkerID = 0, 
-                  blockX = 0, blockY = 0, originX = 0, originY = 0, 
+    def __DrawBlock(context,
+                  dictionary = None, markerLength = None, borderBits = 1,
+                  chessboardSize = (1, 1), squareLength = None, firstMarkerID = 0,
+                  blockX = 0, blockY = 0, originX = 0, originY = 0,
                   mode = "CHESS" ):
-        
+
         if(squareLength is None):
             squareLength = markerLength
 
@@ -43,14 +43,14 @@ class MarkerPrinter:
             markerLength = squareLength
 
         if((squareLength is None) or (markerLength is None)):
-            warnings.warn("lenght is None") 
-            return False 
+            warnings.warn("lenght is None")
+            return False
 
         if((( blockX % 2 == 0 ) == ( blockY % 2 == 0 )) or mode == "ARUCOGRID"):
             if (mode != "CHESS"):
                 if(dictionary is None):
-                    warnings.warn("dictionary is None") 
-                    return False 
+                    warnings.warn("dictionary is None")
+                    return False
 
                 unitLength = markerLength / (float)(dictionary.markerSize + borderBits * 2)
 
@@ -58,9 +58,9 @@ class MarkerPrinter:
                     originX = (blockX - originX) * squareLength + (squareLength - markerLength)*0.5
                     originY = (blockY - originY) * squareLength + (squareLength - markerLength)*0.5
                 else:
-                    originX = (blockX - originX) * squareLength 
-                    originY = (blockY - originY) * squareLength 
-                
+                    originX = (blockX - originX) * squareLength
+                    originY = (blockY - originY) * squareLength
+
                 #
                 context.set_source_rgba(0.0, 0.0, 0.0, 1.0)
                 context.rectangle(originX, originY, markerLength, markerLength)
@@ -72,7 +72,7 @@ class MarkerPrinter:
                 elif (mode == "ARUCO"):
                     markerID = firstMarkerID
                 elif (mode == "ARUCOGRID"):
-                    markerID = firstMarkerID + (blockY * chessboardSize[0] + blockX) 
+                    markerID = firstMarkerID + (blockY * chessboardSize[0] + blockX)
 
                 markerBitMap = np.swapaxes(dictionary.drawMarker(markerID, dictionary.markerSize + borderBits * 2, borderBits = borderBits), 0, 1)
 
@@ -105,15 +105,15 @@ class MarkerPrinter:
                                     context.move_to(originX + unitLength * (mx + borderBits    ), originY + unitLength * (my + borderBits    ))
                                     context.line_to(originX + unitLength * (mx + borderBits    ), originY + unitLength * (my + borderBits + 1))
                                     context.stroke()
-            
+
                     elif(MarkerPrinter.debugMode.upper() == "BLOCK"):
                         context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
                         for mx in range(dictionary.markerSize):
                             for my in range(dictionary.markerSize):
                                 if( markerBitMap[mx + borderBits, my + borderBits] > 0):
                                     context.rectangle(
-                                        originX + unitLength * (mx + borderBits), 
-                                        originY + unitLength * (my + borderBits), 
+                                        originX + unitLength * (mx + borderBits),
+                                        originY + unitLength * (my + borderBits),
                                         unitLength, unitLength)
                                     context.fill()
 
@@ -145,7 +145,7 @@ class MarkerPrinter:
                         cy = sy
                         cd = 3 # 0 right, 1 down, 2 left, 3 up
                         while(True):
-                            nd = (cd + 1)%4  
+                            nd = (cd + 1)%4
                             moved = False
                             if(nd == 0):
                                 if(hEdges[cx, cy] > 0):
@@ -190,19 +190,19 @@ class MarkerPrinter:
             context.rectangle(originX, originY, squareLength, squareLength)
             context.fill()
 
-        return True 
+        return True
 
     def PreviewChessMarkerImage(chessboardSize, squareLength, dpi=96):
         squareLength = squareLength * MarkerPrinter.ptPerMeter
 
         if(len(chessboardSize) != 2):
-            warnings.warn("chessboardSize is not valid") 
+            warnings.warn("chessboardSize is not valid")
             return None
 
             if not ((chessboardSize[0] > 0) and (chessboardSize[1] > 0)):
-                warnings.warn("chessboardSize is not valid") 
-                return None 
-        
+                warnings.warn("chessboardSize is not valid")
+                return None
+
         prevImage = None
         with tempfile.TemporaryDirectory() as tmpdirname:
             with MarkerPrinter.surface[".SVG"] (os.path.join(tmpdirname, "tempSVG.svg"), chessboardSize[0] * squareLength, chessboardSize[1] * squareLength) as surface:
@@ -215,16 +215,16 @@ class MarkerPrinter:
                 for bx in range(chessboardSize[0]):
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(context = context,
-                                    chessboardSize = chessboardSize, squareLength = squareLength, 
+                                    chessboardSize = chessboardSize, squareLength = squareLength,
                                     blockX = bx, blockY = by, mode = "CHESS" ):
-                            warnings.warn("Failed draw marker") 
-                            return None 
+                            warnings.warn("Failed draw marker")
+                            return None
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
                 prevImage = svg2png(bytestring=file.read(), dpi=dpi)
 
         if(prevImage is not None):
-            prevImage = np.frombuffer(prevImage, dtype=np.uint8) 
+            prevImage = np.frombuffer(prevImage, dtype=np.uint8)
             prevImage = cv2.imdecode(prevImage, cv2.IMREAD_GRAYSCALE)
         return prevImage
 
@@ -239,24 +239,24 @@ class MarkerPrinter:
             os.makedirs(path)
 
         if((ext.upper() != ".PNG") and (ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
-            warnings.warn("file extention is not support, must be: png, svg, ps, pdf") 
-            return False 
+            warnings.warn("file extention is not support, must be: png, svg, ps, pdf")
+            return False
 
         if(len(chessboardSize) != 2):
-            warnings.warn("chessboardSize is not valid") 
+            warnings.warn("chessboardSize is not valid")
             return False
 
             if not ((chessboardSize[0] > 0) and (chessboardSize[1] > 0)):
-                warnings.warn("chessboardSize is not valid") 
-                return False 
-        
+                warnings.warn("chessboardSize is not valid")
+                return False
+
         if(subSize is not None):
             if(len(subSize) != 2):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
             if not ((subSize[0] > 0) and (subSize[1] > 0)):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
 
         #
         with tempfile.TemporaryDirectory() as tmpdirname:
@@ -274,10 +274,10 @@ class MarkerPrinter:
                 for bx in range(chessboardSize[0]):
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(context = context,
-                                    chessboardSize = chessboardSize, squareLength = squareLength, 
+                                    chessboardSize = chessboardSize, squareLength = squareLength,
                                     blockX = bx, blockY = by, mode = "CHESS" ):
-                            warnings.warn("Failed draw marker") 
-                            return False 
+                            warnings.warn("Failed draw marker")
+                            return False
 
                 ''' Too slow
                 if(ext.upper() == ".PNG"):
@@ -288,7 +288,6 @@ class MarkerPrinter:
             if(ext.upper() == ".PNG"):
                 with open(os.path.join(path2, name + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
                     svg2png(bytestring=file.read(),write_to=filePath)
-                    
 
             if(subSize is not None):
                 subDivide = (\
@@ -297,7 +296,7 @@ class MarkerPrinter:
 
                 subChessboardBlockX = np.clip ( np.arange(0, subSize[0] * subDivide[0] + 1, subSize[0]), 0, chessboardSize[0])
                 subChessboardBlockY = np.clip ( np.arange(0, subSize[1] * subDivide[1] + 1, subSize[1]), 0, chessboardSize[1])
-            
+
                 subChessboardSliceX = subChessboardBlockX.astype(np.float) * squareLength
                 subChessboardSliceY = subChessboardBlockY.astype(np.float) * squareLength
 
@@ -309,7 +308,7 @@ class MarkerPrinter:
 
                         with MarkerPrinter.surface[ext.upper()](os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()]), subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID]) as surface:
                             context = cairo.Context(surface)
-                        
+
                             context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
                             context.rectangle(0, 0, subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID])
                             context.fill()
@@ -317,11 +316,11 @@ class MarkerPrinter:
                             for bx in range(subChessboardBlockX[subXID+1] - subChessboardBlockX[subXID]):
                                 for by in range(subChessboardBlockY[subYID+1] - subChessboardBlockY[subYID]):
                                     if not MarkerPrinter.__DrawBlock(context = context,
-                                                chessboardSize = chessboardSize, squareLength = squareLength, 
+                                                chessboardSize = chessboardSize, squareLength = squareLength,
                                                 blockX = subChessboardBlockX[subXID] + bx, blockY = subChessboardBlockY[subYID] + by,
                                                 originX = subChessboardBlockX[subXID], originY = subChessboardBlockY[subYID], mode = "CHESS" ):
-                                        warnings.warn("Failed draw marker") 
-                                        return False 
+                                        warnings.warn("Failed draw marker")
+                                        return False
 
                             ''' Too slow
                             if(ext.upper() == ".PNG"):
@@ -333,7 +332,7 @@ class MarkerPrinter:
                             with open(os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
                                 svg2png(bytestring=file.read(),write_to=os.path.join(path, subName + ext))
 
-        return True 
+        return True
 
     def PreviewArucoMarkerImage(dictionary, markerID, markerLength, borderBits=1, dpi=96):
         markerLength = markerLength * MarkerPrinter.ptPerMeter
@@ -344,14 +343,14 @@ class MarkerPrinter:
                 context = cairo.Context(surface)
 
                 if not MarkerPrinter.__DrawBlock(context = context, dictionary = dictionary, markerLength = markerLength, borderBits = borderBits, firstMarkerID = markerID, mode = "ARUCO"):
-                    warnings.warn("Failed draw marker") 
-                    return None 
+                    warnings.warn("Failed draw marker")
+                    return None
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
                 prevImage = svg2png(bytestring=file.read(), dpi=dpi)
 
         if(prevImage is not None):
-            prevImage = np.frombuffer(prevImage, dtype=np.uint8) 
+            prevImage = np.frombuffer(prevImage, dtype=np.uint8)
             prevImage = cv2.imdecode(prevImage, cv2.IMREAD_GRAYSCALE)
         return prevImage
 
@@ -366,8 +365,8 @@ class MarkerPrinter:
             os.makedirs(path)
 
         if((ext.upper() != ".PNG") and (ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
-            warnings.warn("file extention is not support, must be: png, svg, ps, pdf") 
-            return False 
+            warnings.warn("file extention is not support, must be: png, svg, ps, pdf")
+            return False
 
         #
         ''' Old way
@@ -385,8 +384,8 @@ class MarkerPrinter:
                 context = cairo.Context(surface)
 
                 if not MarkerPrinter.__DrawBlock(context = context, dictionary = dictionary, markerLength = markerLength, borderBits = borderBits, firstMarkerID = markerID, mode = "ARUCO"):
-                    warnings.warn("Failed draw marker") 
-                    return False 
+                    warnings.warn("Failed draw marker")
+                    return False
 
                 ''' Too slow
                 if(ext.upper() == ".PNG"):
@@ -398,7 +397,7 @@ class MarkerPrinter:
                 with open(os.path.join(path2, name + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
                     svg2png(bytestring=file.read(),write_to=filePath)
 
-        return True 
+        return True
 
     def PreviewCharucoMarkerImage(charucoBoard, borderBits=1, dpi=96):
         dictionary = charucoBoard.dictionary
@@ -420,16 +419,16 @@ class MarkerPrinter:
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(context = context,
                                     dictionary = dictionary, markerLength = markerLength, borderBits = borderBits,
-                                    chessboardSize = chessboardSize, squareLength = squareLength, 
+                                    chessboardSize = chessboardSize, squareLength = squareLength,
                                     blockX = bx, blockY = by, mode = "CHARUCO"):
-                            warnings.warn("Failed draw marker") 
-                            return False 
+                            warnings.warn("Failed draw marker")
+                            return False
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
                 prevImage = svg2png(bytestring=file.read(), dpi=dpi)
 
         if(prevImage is not None):
-            prevImage = np.frombuffer(prevImage, dtype=np.uint8) 
+            prevImage = np.frombuffer(prevImage, dtype=np.uint8)
             prevImage = cv2.imdecode(prevImage, cv2.IMREAD_GRAYSCALE)
         return prevImage
 
@@ -442,16 +441,16 @@ class MarkerPrinter:
             os.makedirs(path)
 
         if((ext.upper() != ".PNG") and (ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
-            warnings.warn("file extention is not support, must be: png, svg, ps, pdf") 
-            return False 
+            warnings.warn("file extention is not support, must be: png, svg, ps, pdf")
+            return False
 
         if(subSize is not None):
             if(len(subSize) != 2):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
             if not ((subSize[0] > 0) and (subSize[1] > 0)):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
 
         #
         dictionary = charucoBoard.dictionary
@@ -460,7 +459,7 @@ class MarkerPrinter:
         markerLength = charucoBoard.getMarkerLength() * MarkerPrinter.ptPerMeter
         unitLength = markerLength / (float)(dictionary.markerSize + borderBits * 2)
 
-        # 
+        #
         ''' Old way
         if(ext.upper() == ".PNG"):
             charucoBoardImage = charucoBoard.draw((chessboardSize[0] * int(math.ceil(squareLength)), chessboardSize[1] * int(math.ceil(squareLength))), borderBits = borderBits)
@@ -473,7 +472,7 @@ class MarkerPrinter:
 
                 subChessboardBlockX = np.clip ( np.arange(0, subSize[0] * subDivide[0] + 1, subSize[0]), 0, chessboardSize[0])
                 subChessboardBlockY = np.clip ( np.arange(0, subSize[1] * subDivide[1] + 1, subSize[1]), 0, chessboardSize[1])
-            
+
                 subChessboardSliceX = subChessboardBlockX * int(math.ceil(squareLength))
                 subChessboardSliceY = subChessboardBlockY * int(math.ceil(squareLength))
 
@@ -508,8 +507,8 @@ class MarkerPrinter:
                                     dictionary = dictionary, markerLength = markerLength, borderBits = borderBits,
                                     chessboardSize = chessboardSize, squareLength = squareLength,
                                     blockX = bx, blockY = by, mode = "CHARUCO"):
-                            warnings.warn("Failed draw marker") 
-                            return False 
+                            warnings.warn("Failed draw marker")
+                            return False
 
                 ''' Too slow
                 if(ext.upper() == ".PNG"):
@@ -528,7 +527,7 @@ class MarkerPrinter:
 
                 subChessboardBlockX = np.clip ( np.arange(0, subSize[0] * subDivide[0] + 1, subSize[0]), 0, chessboardSize[0])
                 subChessboardBlockY = np.clip ( np.arange(0, subSize[1] * subDivide[1] + 1, subSize[1]), 0, chessboardSize[1])
-            
+
                 subChessboardSliceX = subChessboardBlockX.astype(np.float) * squareLength
                 subChessboardSliceY = subChessboardBlockY.astype(np.float) * squareLength
 
@@ -540,7 +539,7 @@ class MarkerPrinter:
 
                         with MarkerPrinter.surface[ext.upper()](os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()]), subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID]) as surface:
                             context = cairo.Context(surface)
-                        
+
                             context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
                             context.rectangle(0, 0, subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID])
                             context.fill()
@@ -552,8 +551,8 @@ class MarkerPrinter:
                                                 chessboardSize = chessboardSize, squareLength = squareLength,
                                                 blockX = subChessboardBlockX[subXID] + bx, blockY = subChessboardBlockY[subYID] + by,
                                                 originX = subChessboardBlockX[subXID], originY = subChessboardBlockY[subYID], mode = "CHARUCO"):
-                                        warnings.warn("Failed draw marker") 
-                                        return False 
+                                        warnings.warn("Failed draw marker")
+                                        return False
 
                             ''' Too slow
                             if(ext.upper() == ".PNG"):
@@ -564,7 +563,6 @@ class MarkerPrinter:
                         if(ext.upper() == ".PNG"):
                             with open(os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
                                 svg2png(bytestring=file.read(),write_to=os.path.join(path, subName + ext))
-              
 
         return True
 
@@ -592,17 +590,17 @@ class MarkerPrinter:
                                     dictionary = dictionary, markerLength = markerLength, borderBits = borderBits,
                                     chessboardSize = chessboardSize, squareLength = squareLength, firstMarkerID = firstMarker,
                                     blockX = bx, blockY = by, mode = "ARUCOGRID"):
-                            warnings.warn("Failed draw marker") 
-                            return False 
+                            warnings.warn("Failed draw marker")
+                            return False
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
                 prevImage = svg2png(bytestring=file.read(), dpi=dpi)
 
         if(prevImage is not None):
-            prevImage = np.frombuffer(prevImage, dtype=np.uint8) 
+            prevImage = np.frombuffer(prevImage, dtype=np.uint8)
             prevImage = cv2.imdecode(prevImage, cv2.IMREAD_GRAYSCALE)
         return prevImage
-   
+
     def GenArucoGridMarkerImage(filePath, arucoGridBoard, borderBits=1, subSize=None):
         # check
         path, nameExt = os.path.split(filePath)
@@ -612,16 +610,16 @@ class MarkerPrinter:
             os.makedirs(path)
 
         if((ext.upper() != ".PNG") and (ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
-            warnings.warn("file extention is not support, must be: png, svg, ps, pdf") 
-            return False 
+            warnings.warn("file extention is not support, must be: png, svg, ps, pdf")
+            return False
 
         if(subSize is not None):
             if(len(subSize) != 2):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
             if not ((subSize[0] > 0) and (subSize[1] > 0)):
-                warnings.warn("subSize is not valid") 
-                return False 
+                warnings.warn("subSize is not valid")
+                return False
 
         #
         dictionary = arucoGridBoard.dictionary
@@ -656,8 +654,8 @@ class MarkerPrinter:
                                     dictionary = dictionary, markerLength = markerLength, borderBits = borderBits,
                                     chessboardSize = chessboardSize, squareLength = squareLength, firstMarkerID = firstMarker,
                                     blockX = bx, blockY = by, mode = "ARUCOGRID"):
-                            warnings.warn("Failed draw marker") 
-                            return False 
+                            warnings.warn("Failed draw marker")
+                            return False
 
             if(ext.upper() == ".PNG"):
                 with open(os.path.join(path2, name + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
@@ -670,7 +668,7 @@ class MarkerPrinter:
 
                 subChessboardBlockX = np.clip ( np.arange(0, subSize[0] * subDivide[0] + 1, subSize[0]), 0, chessboardSize[0])
                 subChessboardBlockY = np.clip ( np.arange(0, subSize[1] * subDivide[1] + 1, subSize[1]), 0, chessboardSize[1])
-            
+
                 subChessboardSliceX = subChessboardBlockX.astype(np.float) * squareLength
                 subChessboardSliceY = subChessboardBlockY.astype(np.float) * squareLength
 
@@ -685,7 +683,7 @@ class MarkerPrinter:
 
                         with MarkerPrinter.surface[ext.upper()](os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()]), subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID]) as surface:
                             context = cairo.Context(surface)
-                        
+
                             context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
                             context.rectangle(0, 0, subChessboardSliceX[subXID+1] - subChessboardSliceX[subXID], subChessboardSliceY[subYID+1] - subChessboardSliceY[subYID])
                             context.fill()
@@ -697,39 +695,14 @@ class MarkerPrinter:
                                                 chessboardSize = chessboardSize, squareLength = squareLength, firstMarkerID = firstMarker,
                                                 blockX = subChessboardBlockX[subXID] + bx, blockY = subChessboardBlockY[subYID] + by,
                                                 originX = subChessboardBlockX[subXID], originY = subChessboardBlockY[subYID], mode = "ARUCOGRID"):
-                                        warnings.warn("Failed draw marker") 
-                                        return False 
+                                        warnings.warn("Failed draw marker")
+                                        return False
 
                         if(ext.upper() == ".PNG"):
                             with open(os.path.join(path2, subName + MarkerPrinter.surfaceEXT[ext.upper()])) as file:
                                 svg2png(bytestring=file.read(),write_to=os.path.join(path, subName + ext))
-              
 
         return True
 
-if __name__ == '__main__':   
-
-    '''
-    charucoBoard = aruco.CharucoBoard_create(25, 10, 0.09, 0.07, aruco.Dictionary_get(aruco.DICT_5X5_1000))
-    MarkerPrinter.GenCharucoMarkerImage("./Marker_25_10_0x09_0x07_1/marker.png", charucoBoard, subSize = (5, 5))
-    MarkerPrinter.GenCharucoMarkerImage("./Marker_25_10_0x09_0x07_1/marker.svg", charucoBoard, subSize = (5, 5))
-    MarkerPrinter.GenCharucoMarkerImage("./Marker_25_10_0x09_0x07_1/marker.pdf", charucoBoard, subSize = (5, 5))
-    MarkerPrinter.GenCharucoMarkerImage("./Marker_25_10_0x09_0x07_1/marker.ps", charucoBoard, subSize = (5, 5))
-
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker0.png", aruco.Dictionary_get(aruco.DICT_5X5_1000), 0, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker1.png", aruco.Dictionary_get(aruco.DICT_5X5_1000), 1, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker2.png", aruco.Dictionary_get(aruco.DICT_5X5_1000), 2, 0.07)
-
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker0.svg", aruco.Dictionary_get(aruco.DICT_5X5_1000), 0, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker1.svg", aruco.Dictionary_get(aruco.DICT_5X5_1000), 1, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker2.svg", aruco.Dictionary_get(aruco.DICT_5X5_1000), 2, 0.07)
-
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker0.pdf", aruco.Dictionary_get(aruco.DICT_5X5_1000), 0, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker1.pdf", aruco.Dictionary_get(aruco.DICT_5X5_1000), 1, 0.07)
-    MarkerPrinter.GenArucoMarkerImage("./Marker_25_10_0x09_0x07_1/arucoMarker2.pdf", aruco.Dictionary_get(aruco.DICT_5X5_1000), 2, 0.07)
-
-    MarkerPrinter.GenChessMarkerImage("./Marker_25_10_0x09_0x07_1/chessMarker.png", (25, 10), 0.09, subSize = (5, 5))
-    MarkerPrinter.GenChessMarkerImage("./Marker_25_10_0x09_0x07_1/chessMarker.svg", (25, 10), 0.09, subSize = (36, 36))
-    MarkerPrinter.GenChessMarkerImage("./Marker_25_10_0x09_0x07_1/chessMarker.pdf", (25, 10), 0.09, subSize = (36, 5))
-    '''
-
+if __name__ == '__main__':
+    pass
