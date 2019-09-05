@@ -189,7 +189,7 @@ class MarkerPrinterGUI:
         tk.Label(self.charucoMarkerUIFrame, text="squareLength (Unit: Meter)").grid(row=0, column=3, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame, text="markerLength (Unit: Meter)").grid(row=0, column=4, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame, text="borderBits").grid(row=0, column=5, sticky = tk.NSEW)
-        
+
         self.charucoMarkerDictionaryStr = tk.StringVar()
         self.charucoMarkerChessboardSizeXStr = tk.StringVar()
         self.charucoMarkerChessboardSizeXStr.set("16")
