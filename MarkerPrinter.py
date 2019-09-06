@@ -46,8 +46,6 @@ def SaveArucoDictBytesList(filePath = "arucoDictBytesList.npz"):
         warnings.warn(str(e))
         return
 
-SaveArucoDictBytesList()
-
 class MarkerPrinter:
 
     debugMode = None # "LINE" "BLOCK"
