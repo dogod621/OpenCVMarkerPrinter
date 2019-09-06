@@ -38,39 +38,44 @@ class MarkerPrinterGUI:
         sizeX = None
         try:
             sizeX = int(self.charucoMarkerChessboardSizeXStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "sizeX is not valid")
             return
 
         sizeY = None
         try:
             sizeY = int(self.charucoMarkerChessboardSizeYStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "sizeY is not valid")
             return
 
         squareLength = None
         try:
             squareLength = float(self.charucoMarkerSquareLengthStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "squareLength is not valid")
             return
 
         markerLength = None
         try:
             markerLength = float(self.charucoMarkerMarkerLengthStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markerLength is not valid")
             return
 
         borderBits = None
         try:
             borderBits = int(self.charucoMarkerBorderBitsStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "borderBits is not valid")
             return
 
-        arucoDict = aruco.Dictionary_get(self.dictList[self.charucoMarkerDictionaryStr.get()])
+        dictionary = self.charucoMarkerDictionaryStr.get()
 
         # check
         if(sizeX <= 1):
@@ -93,7 +98,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "squareLength < markerLength")
             return
 
-        if(arucoDict.bytesList.shape[0] < (( sizeX * sizeY ) // 2)):
+        if(len(MarkerPrinter.data["aruco"][dictionary]) < (( sizeX * sizeY ) // 2)):
             messagebox.showinfo("Error", "aruce dictionary is not enough for your board size")
             return
 
@@ -103,12 +108,11 @@ class MarkerPrinterGUI:
 
         #
         try:
-            charucoBoard = aruco.CharucoBoard_create(sizeX, sizeY, squareLength, markerLength, arucoDict)
-            image = MarkerPrinter.PreviewCharucoMarkerImage(charucoBoard, borderBits=borderBits, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter))))
-            tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewCharucoMarkerImage(dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
             self.charucoMarkerImageLabel.imgtk = tkImage
             self.charucoMarkerImageLabel.config(image=tkImage)
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "create marker failed")
             return
 
@@ -116,14 +120,16 @@ class MarkerPrinterGUI:
             subSizeX = None
             try:
                 subSizeX = int(self.charucoMarkerSaveSubSizeXStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeX is not valid")
                 return
 
             subSizeY = None
             try:
                 subSizeY = int(self.charucoMarkerSaveSubSizeYStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeY is not valid")
                 return
 
@@ -159,8 +165,9 @@ class MarkerPrinterGUI:
                     defaultextension="*.*")
 
                 if (askFileName):
-                    MarkerPrinter.GenCharucoMarkerImage(askFileName, charucoBoard, borderBits=borderBits, subSize=subSize)
-            except:
+                    MarkerPrinter.GenCharucoMarkerImage(askFileName, dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize=subSize)
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "save marker failed")
                 return
 
@@ -229,7 +236,7 @@ class MarkerPrinterGUI:
         tk.Entry(self.charucoMarkerUIFrame2, textvariable=self.charucoMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
 
         self.charucoMarkerDictionaryMenue['menu'].delete(0, 'end')
-        for dictName in list(self.dictList.keys()):
+        for dictName in self.dictList:
             self.charucoMarkerDictionaryMenue['menu'].add_command(label=dictName, command=tk._setit(self.charucoMarkerDictionaryStr, dictName, self.OnSelectCharucoMarkerDictionary))
 
         self.OnSelectCharucoMarkerDictionary("DICT_ARUCO_ORIGINAL")
@@ -241,46 +248,52 @@ class MarkerPrinterGUI:
         markersX = None
         try:
             markersX = int(self.arucoGridMarkerMarkersXStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markersX is not valid")
             return
 
         markersY = None
         try:
             markersY = int(self.arucoGridMarkerMarkersYStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markersY is not valid")
             return
 
         markerLength = None
         try:
             markerLength = float(self.arucoGridMarkerMarkerLengthStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markerLength is not valid")
             return
 
         markerSeparation = None
         try:
             markerSeparation = float(self.arucoGridMarkerMarkerSeparationStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markerSeparation is not valid")
             return
 
         borderBits = None
         try:
             borderBits = int(self.arucoGridMarkerBorderBitsStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "borderBits is not valid")
             return
 
         firstMarker = None
         try:
             firstMarker = int(self.arucoGridMarkerFirstMarkerStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "firstMarker is not valid")
             return
 
-        arucoDict = aruco.Dictionary_get(self.dictList[self.arucoGridMarkerDictionaryStr.get()])
+        dictionary = self.charucoMarkerDictionaryStr.get()
 
         # check
         if(markersX <= 1):
@@ -303,7 +316,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "firstMarker < 0")
             return
 
-        if(arucoDict.bytesList.shape[0] < (( markersX * markersY ) + firstMarker)):
+        if(len(MarkerPrinter.data["aruco"][dictionary]) < (( markersX * markersY ) + firstMarker)):
             messagebox.showinfo("Error", "aruce dictionary is not enough for your board size and firstMarker")
             return
 
@@ -313,12 +326,11 @@ class MarkerPrinterGUI:
 
         #
         try:
-            arucoGridBoard = aruco.GridBoard_create(markersX, markersY, markerLength, markerSeparation, arucoDict, firstMarker = firstMarker)
-            image = MarkerPrinter.PreviewArucoGridMarkerImage(arucoGridBoard, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter))))
-            tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter)))))
             self.arucoGridMarkerImageLabel.imgtk = tkImage
             self.arucoGridMarkerImageLabel.config(image=tkImage)
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "create marker failed")
             return
 
@@ -326,14 +338,16 @@ class MarkerPrinterGUI:
             subSizeX = None
             try:
                 subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeX is not valid")
                 return
 
             subSizeY = None
             try:
                 subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeY is not valid")
                 return
 
@@ -369,8 +383,9 @@ class MarkerPrinterGUI:
                     defaultextension="*.*")
 
                 if (askFileName):
-                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, arucoGridBoard, borderBits=borderBits, subSize=subSize)
-            except:
+                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, dictionary, (markersX, markersY), markerLength, markerSeparation, borderBits=borderBits, subSize=subSize)
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "save marker failed")
                 return
 
@@ -443,7 +458,7 @@ class MarkerPrinterGUI:
         tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
 
         self.arucoGridMarkerDictionaryMenue['menu'].delete(0, 'end')
-        for dictName in list(self.dictList.keys()):
+        for dictName in self.dictList:
             self.arucoGridMarkerDictionaryMenue['menu'].add_command(label=dictName, command=tk._setit(self.arucoGridMarkerDictionaryStr, dictName, self.OnSelectArucoGridMarkerDictionary))
 
         self.OnSelectArucoGridMarkerDictionary("DICT_ARUCO_ORIGINAL")
@@ -455,25 +470,28 @@ class MarkerPrinterGUI:
         markerID = None
         try:
             markerID = int(self.arucoMarkerMarkerIDStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markerID is not valid")
             return
 
         markerLength = None
         try:
             markerLength = float(self.arucoMarkerMarkerLengthStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "markerLength is not valid")
             return
 
         borderBits = None
         try:
             borderBits = int(self.arucoMarkerBorderBitsStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "borderBits is not valid")
             return
 
-        arucoDict = aruco.Dictionary_get(self.dictList[self.arucoMarkerDictionaryStr.get()])
+        dictionary = self.charucoMarkerDictionaryStr.get()
 
         # check
         if(markerID < 0):
@@ -484,7 +502,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "markerLength <= 0")
             return
 
-        if(arucoDict.bytesList.shape[0] <= markerID ):
+        if(len(MarkerPrinter.data["aruco"][dictionary]) <= markerID ):
             messagebox.showinfo("Error", "markerID is not in aruce dictionary")
             return
 
@@ -494,11 +512,11 @@ class MarkerPrinterGUI:
 
         #
         try:
-            image = MarkerPrinter.PreviewArucoMarkerImage(arucoDict, markerID, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(markerLength * MarkerPrinter.ptPerMeter), int(markerLength * MarkerPrinter.ptPerMeter))))
-            tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoMarkerImage(dictionary, markerID, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(markerLength * MarkerPrinter.ptPerMeter), int(markerLength * MarkerPrinter.ptPerMeter)))))
             self.arucoMarkerImageLabel.imgtk = tkImage
             self.arucoMarkerImageLabel.config(image=tkImage)
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "create marker failed")
             return
 
@@ -512,8 +530,9 @@ class MarkerPrinterGUI:
                     defaultextension="*.*")
 
                 if (askFileName):
-                    MarkerPrinter.GenArucoMarkerImage(askFileName, arucoDict, markerID, markerLength, borderBits=borderBits)
-            except:
+                    MarkerPrinter.GenArucoMarkerImage(askFileName, dictionary, markerID, markerLength, borderBits=borderBits)
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "save marker failed")
                 return
 
@@ -559,7 +578,7 @@ class MarkerPrinterGUI:
         tk.Button(self.arucoMarkerUIFrame2, text = "Save", command = self.OnSaveArucoMarker).grid(row=0, column=1, sticky = tk.NSEW)
 
         self.arucoMarkerDictionaryMenue['menu'].delete(0, 'end')
-        for dictName in list(self.dictList.keys()):
+        for dictName in self.dictList:
             self.arucoMarkerDictionaryMenue['menu'].add_command(label=dictName, command=tk._setit(self.arucoMarkerDictionaryStr, dictName, self.OnSelectArucoMarkerDictionary))
 
         self.OnSelectArucoMarkerDictionary("DICT_ARUCO_ORIGINAL")
@@ -568,21 +587,24 @@ class MarkerPrinterGUI:
         sizeX = None
         try:
             sizeX = int(self.chessMarkerChessboardSizeXStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "sizeX is not valid")
             return
 
         sizeY = None
         try:
             sizeY = int(self.chessMarkerChessboardSizeYStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "sizeY is not valid")
             return
 
         squareLength = None
         try:
             squareLength = float(self.chessMarkerSquareLengthStr.get())
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "squareLength is not valid")
             return
 
@@ -601,11 +623,11 @@ class MarkerPrinterGUI:
 
         #
         try:
-            image = MarkerPrinter.PreviewChessMarkerImage((sizeX, sizeY), squareLength, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter))))
-            tkImage = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewChessMarkerImage((sizeX, sizeY), squareLength, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
             self.chessMarkerImageLabel.imgtk = tkImage
             self.chessMarkerImageLabel.config(image=tkImage)
-        except:
+        except Exception as e:
+            warnings.warn(str(e))
             messagebox.showinfo("Error", "create marker failed")
             return
 
@@ -613,14 +635,16 @@ class MarkerPrinterGUI:
             subSizeX = None
             try:
                 subSizeX = int(self.chessMarkerSaveSubSizeXStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeX is not valid")
                 return
 
             subSizeY = None
             try:
                 subSizeY = int(self.chessMarkerSaveSubSizeYStr.get())
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "subSizeY is not valid")
                 return
 
@@ -657,7 +681,8 @@ class MarkerPrinterGUI:
 
                 if (askFileName):
                     MarkerPrinter.GenChessMarkerImage(askFileName, (sizeX, sizeY), squareLength, subSize=subSize)
-            except:
+            except Exception as e:
+                warnings.warn(str(e))
                 messagebox.showinfo("Error", "save marker failed")
                 return
 
@@ -722,29 +747,29 @@ class MarkerPrinterGUI:
         self.displayShape = pDisplayShape
 
         self.dictList = \
-        {
-            "DICT_4X4_50": aruco.DICT_4X4_50,
-            "DICT_4X4_100": aruco.DICT_4X4_100,
-            "DICT_4X4_250": aruco.DICT_4X4_250,
-            "DICT_4X4_1000": aruco.DICT_4X4_1000,
-            "DICT_5X5_50": aruco.DICT_5X5_50,
-            "DICT_5X5_100": aruco.DICT_5X5_100,
-            "DICT_5X5_250": aruco.DICT_5X5_250,
-            "DICT_5X5_1000": aruco.DICT_5X5_1000,
-            "DICT_6X6_50": aruco.DICT_6X6_50,
-            "DICT_6X6_100": aruco.DICT_6X6_100,
-            "DICT_6X6_250": aruco.DICT_6X6_250,
-            "DICT_6X6_1000": aruco.DICT_6X6_1000,
-            "DICT_7X7_50": aruco.DICT_7X7_50,
-            "DICT_7X7_100": aruco.DICT_7X7_100,
-            "DICT_7X7_250": aruco.DICT_7X7_250,
-            "DICT_7X7_1000": aruco.DICT_7X7_1000,
-            "DICT_ARUCO_ORIGINAL": aruco.DICT_ARUCO_ORIGINAL,
-            "DICT_APRILTAG_16h5": aruco.DICT_APRILTAG_16h5,
-            "DICT_APRILTAG_25h9": aruco.DICT_APRILTAG_25h9,
-            "DICT_APRILTAG_36h10": aruco.DICT_APRILTAG_36h10,
-            "DICT_APRILTAG_36h11": aruco.DICT_APRILTAG_36h11,
-        }
+        [
+            "DICT_4X4_50",
+            "DICT_4X4_100",
+            "DICT_4X4_250",
+            "DICT_4X4_1000",
+            "DICT_5X5_50",
+            "DICT_5X5_100",
+            "DICT_5X5_250",
+            "DICT_5X5_1000",
+            "DICT_6X6_50",
+            "DICT_6X6_100",
+            "DICT_6X6_250",
+            "DICT_6X6_1000",
+            "DICT_7X7_50",
+            "DICT_7X7_100",
+            "DICT_7X7_250",
+            "DICT_7X7_1000",
+            "DICT_ARUCO_ORIGINAL",
+            "DICT_APRILTAG_16h5",
+            "DICT_APRILTAG_25h9",
+            "DICT_APRILTAG_36h10",
+            "DICT_APRILTAG_36h11",
+        ]
 
         # GUI
         self.window = tk.Tk()

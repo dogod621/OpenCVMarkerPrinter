@@ -8,14 +8,12 @@ This small app can save some commonly used opencv markers such as ArUco, ArUcoGr
 ### Dependencies
 #### MarkerPrinter
   * numpy
-  * opencv-python
-  * opencv-contrib-python
+  * PIL(Pillow, for image processing)
   * cairo(for drawing vector graphic)
   * cairosvg(for svg to png)
 
 #### MarkerPrinterGUI
   * tkinter(for GUI)
-  * PIL(Pillow, for image processing)
 
 ## Tutorial
 ### Seletct dictionary:
