@@ -287,10 +287,10 @@ class MarkerPrinter:
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(
                             context = context,
-                            chessboardSize = chessboardSize, 
+                            chessboardSize = chessboardSize,
                             squareLength = squareLength,
-                            blockX = bx, 
-                            blockY = by, 
+                            blockX = bx,
+                            blockY = by,
                             mode = "CHESS"):
                             warnings.warn("Failed draw marker")
                             return None
@@ -342,10 +342,10 @@ class MarkerPrinter:
                 for by in range(chessboardSize[1]):
                     if not MarkerPrinter.__DrawBlock(
                         context = context,
-                        chessboardSize = chessboardSize, 
+                        chessboardSize = chessboardSize,
                         squareLength = squareLength,
-                        blockX = bx, 
-                        blockY = by, 
+                        blockX = bx,
+                        blockY = by,
                         mode = "CHESS" ):
                         warnings.warn("Failed draw marker")
                         return False
@@ -378,12 +378,12 @@ class MarkerPrinter:
                             for by in range(subChessboardBlockY[subYID+1] - subChessboardBlockY[subYID]):
                                 if not MarkerPrinter.__DrawBlock(
                                     context = context,
-                                    chessboardSize = chessboardSize, 
+                                    chessboardSize = chessboardSize,
                                     squareLength = squareLength,
-                                    blockX = subChessboardBlockX[subXID] + bx, 
+                                    blockX = subChessboardBlockX[subXID] + bx,
                                     blockY = subChessboardBlockY[subYID] + by,
-                                    originX = subChessboardBlockX[subXID], 
-                                    originY = subChessboardBlockY[subYID], 
+                                    originX = subChessboardBlockX[subXID],
+                                    originY = subChessboardBlockY[subYID],
                                     mode = "CHESS" ):
                                     warnings.warn("Failed draw marker")
                                     return False
@@ -399,11 +399,11 @@ class MarkerPrinter:
                 context = cairo.Context(surface)
 
                 if not MarkerPrinter.__DrawBlock(
-                    context = context, 
-                    dictionary = dictionary, 
-                    markerLength = markerLength, 
-                    borderBits = borderBits, 
-                    firstMarkerID = markerID, 
+                    context = context,
+                    dictionary = dictionary,
+                    markerLength = markerLength,
+                    borderBits = borderBits,
+                    firstMarkerID = markerID,
                     mode = "ARUCO"):
                     warnings.warn("Failed draw marker")
                     return None
@@ -432,11 +432,11 @@ class MarkerPrinter:
             context = cairo.Context(surface)
 
             if not MarkerPrinter.__DrawBlock(
-                context = context, 
-                dictionary = dictionary, 
-                markerLength = markerLength, 
-                borderBits = borderBits, 
-                firstMarkerID = markerID, 
+                context = context,
+                dictionary = dictionary,
+                markerLength = markerLength,
+                borderBits = borderBits,
+                firstMarkerID = markerID,
                 mode = "ARUCO"):
                 warnings.warn("Failed draw marker")
                 return False
@@ -460,13 +460,13 @@ class MarkerPrinter:
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(
                             context = context,
-                            dictionary = dictionary, 
-                            markerLength = markerLength, 
+                            dictionary = dictionary,
+                            markerLength = markerLength,
                             borderBits = borderBits,
-                            chessboardSize = chessboardSize, 
+                            chessboardSize = chessboardSize,
                             squareLength = squareLength,
-                            blockX = bx, 
-                            blockY = by, 
+                            blockX = bx,
+                            blockY = by,
                             mode = "CHARUCO"):
                             warnings.warn("Failed draw marker")
                             return False
@@ -511,13 +511,13 @@ class MarkerPrinter:
                 for by in range(chessboardSize[1]):
                     if not MarkerPrinter.__DrawBlock(
                         context = context,
-                        dictionary = dictionary, 
-                        markerLength = markerLength, 
+                        dictionary = dictionary,
+                        markerLength = markerLength,
                         borderBits = borderBits,
-                        chessboardSize = chessboardSize, 
+                        chessboardSize = chessboardSize,
                         squareLength = squareLength,
-                        blockX = bx, 
-                        blockY = by, 
+                        blockX = bx,
+                        blockY = by,
                         mode = "CHARUCO"):
                         warnings.warn("Failed draw marker")
                         return False
@@ -550,15 +550,15 @@ class MarkerPrinter:
                             for by in range(subChessboardBlockY[subYID+1] - subChessboardBlockY[subYID]):
                                 if not MarkerPrinter.__DrawBlock(
                                     context = context,
-                                    dictionary = dictionary, 
-                                    markerLength = markerLength, 
+                                    dictionary = dictionary,
+                                    markerLength = markerLength,
                                     borderBits = borderBits,
-                                    chessboardSize = chessboardSize, 
+                                    chessboardSize = chessboardSize,
                                     squareLength = squareLength,
-                                    blockX = subChessboardBlockX[subXID] + bx, 
+                                    blockX = subChessboardBlockX[subXID] + bx,
                                     blockY = subChessboardBlockY[subYID] + by,
-                                    originX = subChessboardBlockX[subXID], 
-                                    originY = subChessboardBlockY[subYID], 
+                                    originX = subChessboardBlockX[subXID],
+                                    originY = subChessboardBlockY[subYID],
                                     mode = "CHARUCO"):
                                     warnings.warn("Failed draw marker")
                                     return False
@@ -582,14 +582,14 @@ class MarkerPrinter:
                     for by in range(chessboardSize[1]):
                         if not MarkerPrinter.__DrawBlock(
                             context = context,
-                            dictionary = dictionary, 
-                            markerLength = markerLength, 
+                            dictionary = dictionary,
+                            markerLength = markerLength,
                             borderBits = borderBits,
-                            chessboardSize = chessboardSize, 
-                            squareLength = markerLength + markerSeparation, 
+                            chessboardSize = chessboardSize,
+                            squareLength = markerLength + markerSeparation,
                             firstMarkerID = firstMarker,
-                            blockX = bx, 
-                            blockY = by, 
+                            blockX = bx,
+                            blockY = by,
                             mode = "ARUCOGRID"):
                             warnings.warn("Failed draw marker")
                             return False
@@ -638,14 +638,14 @@ class MarkerPrinter:
                 for by in range(chessboardSize[1]):
                     if not MarkerPrinter.__DrawBlock(
                         context = context,
-                        dictionary = dictionary, 
-                        markerLength = markerLength, 
+                        dictionary = dictionary,
+                        markerLength = markerLength,
                         borderBits = borderBits,
-                        chessboardSize = chessboardSize, 
-                        squareLength = markerLength + markerSeparation, 
+                        chessboardSize = chessboardSize,
+                        squareLength = markerLength + markerSeparation,
                         firstMarkerID = firstMarker,
-                        blockX = bx, 
-                        blockY = by, 
+                        blockX = bx,
+                        blockY = by,
                         mode = "ARUCOGRID"):
                         warnings.warn("Failed draw marker")
                         return False
@@ -681,16 +681,16 @@ class MarkerPrinter:
                             for by in range(subChessboardBlockY[subYID+1] - subChessboardBlockY[subYID]):
                                 if not MarkerPrinter.__DrawBlock(
                                     context = context,
-                                    dictionary = dictionary, 
-                                    markerLength = markerLength, 
+                                    dictionary = dictionary,
+                                    markerLength = markerLength,
                                     borderBits = borderBits,
-                                    chessboardSize = chessboardSize, 
-                                    squareLength = markerLength + markerSeparation, 
+                                    chessboardSize = chessboardSize,
+                                    squareLength = markerLength + markerSeparation,
                                     firstMarkerID = firstMarker,
-                                    blockX = subChessboardBlockX[subXID] + bx, 
+                                    blockX = subChessboardBlockX[subXID] + bx,
                                     blockY = subChessboardBlockY[subYID] + by,
-                                    originX = subChessboardBlockX[subXID], 
-                                    originY = subChessboardBlockY[subYID], 
+                                    originX = subChessboardBlockX[subXID],
+                                    originY = subChessboardBlockY[subYID],
                                     mode = "ARUCOGRID"):
                                     warnings.warn("Failed draw marker")
                                     return False
