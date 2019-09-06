@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Copyright (c) 2019, Josh Chien. All rights reserved.
+
 from MarkerPrinter import *
 
 import tkinter as tk

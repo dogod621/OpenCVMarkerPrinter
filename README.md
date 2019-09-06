@@ -14,6 +14,8 @@ This small app can save some commonly used opencv markers such as ArUco, ArUcoGr
 
 #### MarkerPrinterGUI
   * tkinter(for GUI)
+  
+#### Install
 
 ## Tutorial
 ### Seletct dictionary:
