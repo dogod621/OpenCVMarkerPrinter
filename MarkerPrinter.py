@@ -4,6 +4,7 @@
 #
 # Copyright (c) 2019, Josh Chien. All rights reserved.
 
+from argparse import ArgumentParser
 import numpy as np
 from PIL import Image
 import io
@@ -40,7 +41,7 @@ def SaveArucoDictBytesList(filePath = "arucoDictBytesList.npz"):
         for name, flag in dictInfo:
             arucoDict = aruco.Dictionary_get(flag)
             arucoDictBytesList[name] = arucoDict.bytesList
-        np.savez(filePath, **arucoDictBytesList)
+        np.savez_compressed(filePath, **arucoDictBytesList)
 
     except Exception as e:
         warnings.warn(str(e))
@@ -696,4 +697,10 @@ class MarkerPrinter:
         return True
 
 if __name__ == '__main__':
-    pass
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-g", "--generate", dest="filename",
+        help="Generate aruco data FILE", metavar="FILE")
+    args = parser.parse_args()
+    if(args.filename):
+        SaveArucoDictBytesList(args.filename)
