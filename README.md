@@ -20,4 +20,4 @@ You can switch ArUco, ArUcoGrid, Chessboard and ChArUco mode at the GUI tab, the
 
 ## Useful Options:
 ### Divde output to chunks
-If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks. 
+If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks.

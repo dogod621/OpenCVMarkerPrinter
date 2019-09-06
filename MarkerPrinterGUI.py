@@ -224,7 +224,7 @@ class MarkerPrinterGUI:
             markerSeparation = float(self.arucoGridMarkerMarkerSeparationStr.get())
             borderBits = int(self.arucoGridMarkerBorderBitsStr.get())
             firstMarker = int(self.arucoGridMarkerFirstMarkerStr.get())
-            dictionary = self.charucoMarkerDictionaryStr.get()
+            dictionary = self.arucoGridMarkerDictionaryStr.get()
             subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
             subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
         except ValueError as e:
@@ -362,7 +362,7 @@ class MarkerPrinterGUI:
             markerID = int(self.arucoMarkerMarkerIDStr.get())
             markerLength = float(self.arucoMarkerMarkerLengthStr.get())
             borderBits = int(self.arucoMarkerBorderBitsStr.get())
-            dictionary = self.charucoMarkerDictionaryStr.get()
+            dictionary = self.arucoMarkerDictionaryStr.get()
         except ValueError as e:
             warnings.warn(str(e))
             messagebox.showinfo("Error", "Enter invalid parameters")
@@ -610,4 +610,4 @@ class MarkerPrinterGUI:
         MarkerPrinter.debugMode = None
 
 if __name__ == '__main__':
-    MarkerPrinterGUI() 
+    MarkerPrinterGUI()
