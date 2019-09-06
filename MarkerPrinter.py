@@ -14,86 +14,39 @@ from cairosvg import svg2png
 import math
 import tempfile
 
-def WriteArucoDict(filePath = "data.txt"):
-    '''
-    import cv2
-    from cv2 import aruco
+def SaveArucoDictBytesList(filePath = "arucoDictBytesList.npz"):
+    import numpy as np
 
-    dictList = \
-    [
-        ("DICT_4X4_50", aruco.DICT_4X4_50),
-        ("DICT_4X4_100", aruco.DICT_4X4_100),
-        ("DICT_4X4_250", aruco.DICT_4X4_250),
-        ("DICT_4X4_1000", aruco.DICT_4X4_1000),
-        ("DICT_5X5_50", aruco.DICT_5X5_50),
-        ("DICT_5X5_100", aruco.DICT_5X5_100),
-        ("DICT_5X5_250", aruco.DICT_5X5_250),
-        ("DICT_5X5_1000", aruco.DICT_5X5_1000),
-        ("DICT_6X6_50", aruco.DICT_6X6_50),
-        ("DICT_6X6_100", aruco.DICT_6X6_100),
-        ("DICT_6X6_250", aruco.DICT_6X6_250),
-        ("DICT_6X6_1000", aruco.DICT_6X6_1000),
-        ("DICT_7X7_50", aruco.DICT_7X7_50),
-        ("DICT_7X7_100", aruco.DICT_7X7_100),
-        ("DICT_7X7_250", aruco.DICT_7X7_250),
-        ("DICT_7X7_1000", aruco.DICT_7X7_1000),
-        ("DICT_ARUCO_ORIGINAL", aruco.DICT_ARUCO_ORIGINAL),
-        ("DICT_APRILTAG_16h5", aruco.DICT_APRILTAG_16h5),
-        ("DICT_APRILTAG_25h9", aruco.DICT_APRILTAG_25h9),
-        ("DICT_APRILTAG_36h10", aruco.DICT_APRILTAG_36h10),
-        ("DICT_APRILTAG_36h11", aruco.DICT_APRILTAG_36h11),
-    ]
+    # cv2 is optional dependency
+    try:
+        import cv2
+        from cv2 import aruco
 
-    with open(filePath,'a+') as file:
-        file.write("!" + "aruco")
-        for k, v in dictList:
-            arucoDict = aruco.Dictionary_get(v)
-            lenDict = arucoDict.bytesList.shape[0]
-            file.write("@" + k)
-            for i in range(lenDict):
-                bm = np.swapaxes(arucoDict.drawMarker(i, arucoDict.markerSize + 2, borderBits = 1), 0, 1)
-                file.write("#" + str(i))
-                for my in range(arucoDict.markerSize):
-                    file.write("$")
-                    for mx in range(arucoDict.markerSize):
-                        if(bm[mx+1, my+1] > 0):
-                            file.write("1")
-                        else:
-                            file.write("0")
-    '''
-    raise RuntimeError("This should not be called")
+        # Name, Flag
+        dictInfo = \
+        [
+            ("DICT_4X4_1000", aruco.DICT_4X4_1000),
+            ("DICT_5X5_1000", aruco.DICT_5X5_1000),
+            ("DICT_6X6_1000", aruco.DICT_6X6_1000),
+            ("DICT_7X7_1000", aruco.DICT_7X7_1000),
+            ("DICT_ARUCO_ORIGINAL", aruco.DICT_ARUCO_ORIGINAL),
+            ("DICT_APRILTAG_16h5", aruco.DICT_APRILTAG_16h5),
+            ("DICT_APRILTAG_25h9", aruco.DICT_APRILTAG_25h9),
+            ("DICT_APRILTAG_36h10", aruco.DICT_APRILTAG_36h10),
+            ("DICT_APRILTAG_36h11", aruco.DICT_APRILTAG_36h11),
+        ]
 
-def ParseArucoData(dataList):
-    arucoData = {}
+        arucoDictBytesList = {}
+        for name, flag in dictInfo:
+            arucoDict = aruco.Dictionary_get(flag)
+            arucoDictBytesList[name] = arucoDict.bytesList
+        np.savez(filePath, **arucoDictBytesList)
 
-    for keyStr in dataList[1:]:
-        keyList = keyStr.split("#")
-        if(len(keyList) > 0):
-            arucoData[keyList[0]] = {}
-            for idStr in keyList[1:]:
-                idList = idStr.split("$")
-                if(len(idList) > 0):
-                    temp = []
-                    for codeStr in idList[1:]:
-                        temp.append([ int(code) > 0 for code in codeStr])
-                    arucoData[keyList[0]][int(idList[0])] = np.array(temp, dtype = bool)
+    except Exception as e:
+        warnings.warn(str(e))
+        return
 
-
-    return arucoData
-
-def ParseData(filePath = "data.txt"):
-    data = {}
-    with open(filePath,'r') as file:
-        fileStr = file.read()
-        fileList = fileStr.split("!")
-        if(len(fileList) > 0):
-            fileList = fileList[1:]
-            for dataStr in fileList:
-                dataList = dataStr.split("@")
-                if(len(dataList) > 0):
-                    if(dataList[0] == "aruco"):
-                        data["aruco"] = ParseArucoData(dataList)
-    return data
+SaveArucoDictBytesList()
 
 class MarkerPrinter:
 
@@ -109,7 +62,43 @@ class MarkerPrinter:
             ".PDF": cairo.PDFSurface,
             ".PS": cairo.PSSurface }
 
-    data = ParseData('data.txt')
+    arucoDictBytesList = np.load("arucoDictBytesList.npz")
+    arucoDictMarkerSize = \
+        {
+            "DICT_4X4_1000": 4,
+            "DICT_5X5_1000": 5,
+            "DICT_6X6_1000": 6,
+            "DICT_7X7_1000": 7,
+            "DICT_ARUCO_ORIGINAL": 5,
+            "DICT_APRILTAG_16h5": 4,
+            "DICT_APRILTAG_25h9": 5,
+            "DICT_APRILTAG_36h10": 6,
+            "DICT_APRILTAG_36h11": 6,
+        }
+
+    def ArucoBits(dictionary, markerID):
+        bytesList = MarkerPrinter.arucoDictBytesList[dictionary][markerID].ravel()
+        markerSize = MarkerPrinter.arucoDictMarkerSize[dictionary]
+
+        arucoBits = np.zeros(shape = (markerSize, markerSize), dtype = bool)
+        base2List = np.array( [128, 64, 32, 16, 8, 4, 2, 1], dtype = np.uint8)
+        currentByteIdx = 0
+        currentByte = bytesList[currentByteIdx]
+        currentBit = 0
+        for row in range(markerSize):
+            for col in range(markerSize):
+                if(currentByte >= base2List[currentBit]):
+                    arucoBits[row, col] = True
+                    currentByte -= base2List[currentBit]
+                currentBit = currentBit + 1
+                if(currentBit == 8):
+                    currentByteIdx = currentByteIdx + 1
+                    currentByte = bytesList[currentByteIdx]
+                    if(8 * (currentByteIdx + 1) > arucoBits.size):
+                        currentBit = 8 * (currentByteIdx + 1) - arucoBits.size
+                    else:
+                        currentBit = 0;
+        return arucoBits
 
     def __DrawBlock(context,
         dictionary = None, markerLength = None, borderBits = 1,
@@ -152,7 +141,7 @@ class MarkerPrinter:
                 elif (mode == "ARUCOGRID"):
                     markerID = firstMarkerID + (blockY * chessboardSize[0] + blockX)
 
-                marker = MarkerPrinter.data["aruco"][dictionary][markerID]
+                marker = MarkerPrinter.ArucoBits(dictionary, markerID)
                 markerSize = marker.shape[0]
                 unitLength = markerLength / (float)(markerSize + borderBits * 2)
 

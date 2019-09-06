@@ -104,7 +104,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "squareLength < markerLength")
             return
 
-        if(len(MarkerPrinter.data["aruco"][dictionary]) < (( sizeX * sizeY ) // 2)):
+        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] < (( sizeX * sizeY ) // 2)):
             messagebox.showinfo("Error", "aruce dictionary is not enough for your board size")
             return
 
@@ -166,8 +166,7 @@ class MarkerPrinterGUI:
                 askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
                     ("scalable vector graphics files","*.svg"), \
                     ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps"),\
-                    ("portable network graphics files","*.png")),
+                    ("post script files","*.ps")),
                     defaultextension="*.*")
 
                 if (askFileName):
@@ -322,7 +321,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "firstMarker < 0")
             return
 
-        if(len(MarkerPrinter.data["aruco"][dictionary]) < (( markersX * markersY ) + firstMarker)):
+        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] < (( markersX * markersY ) + firstMarker)):
             messagebox.showinfo("Error", "aruce dictionary is not enough for your board size and firstMarker")
             return
 
@@ -384,8 +383,7 @@ class MarkerPrinterGUI:
                 askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
                     ("scalable vector graphics files","*.svg"), \
                     ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps"),\
-                    ("portable network graphics files","*.png")),
+                    ("post script files","*.ps")),
                     defaultextension="*.*")
 
                 if (askFileName):
@@ -508,7 +506,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "markerLength <= 0")
             return
 
-        if(len(MarkerPrinter.data["aruco"][dictionary]) <= markerID ):
+        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] <= markerID ):
             messagebox.showinfo("Error", "markerID is not in aruce dictionary")
             return
 
@@ -531,8 +529,7 @@ class MarkerPrinterGUI:
                 askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
                     ("scalable vector graphics files","*.svg"), \
                     ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps"),\
-                    ("portable network graphics files","*.png")),
+                    ("post script files","*.ps")),
                     defaultextension="*.*")
 
                 if (askFileName):
@@ -681,8 +678,7 @@ class MarkerPrinterGUI:
                 askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
                     ("scalable vector graphics files","*.svg"), \
                     ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps"),\
-                    ("portable network graphics files","*.png")),
+                    ("post script files","*.ps")),
                     defaultextension="*.*")
 
                 if (askFileName):
@@ -752,7 +748,7 @@ class MarkerPrinterGUI:
         self.delay = pDelay
         self.displayShape = pDisplayShape
 
-        self.dictList = MarkerPrinter.data["aruco"].keys()
+        self.dictList = MarkerPrinter.arucoDictBytesList.keys()
 
         # GUI
         self.window = tk.Tk()
