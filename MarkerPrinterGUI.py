@@ -7,9 +7,7 @@
 from MarkerPrinter import *
 
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import ttk, filedialog, messagebox
 
 import time
 
@@ -40,50 +38,68 @@ class MarkerPrinterGUI:
     def OnSelectCharucoMarkerDictionary(self, pDictName):
         self.charucoMarkerDictionaryStr.set(pDictName)
 
+    def __SaveMarker(GenMarkerImageCallback, *args, **kwargs):
+
+        if(kwargs.get("subSize",None) is not None):
+            subSizeX, subSizeY = kwargs["subSize"]
+
+            # Check
+            if(subSizeX < 0):
+                messagebox.showinfo("Error", "subSizeX < 0")
+                return
+
+            if(subSizeY < 0):
+                messagebox.showinfo("Error", "subSizeY < 0")
+                return
+
+            kwargs["subSize"] = None
+
+            if(subSizeX > 0):
+                if(subSizeY > 0):
+                    kwargs["subSize"] = (subSizeX, subSizeY)
+                else:
+                    kwargs["subSize"] = (subSizeX, sizeY)
+            else:
+                if(subSizeY > 0):
+                    kwargs["subSize"] = (sizeX, subSizeY)
+                else:
+                    kwargs["subSize"] = None
+
+        try:
+            askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
+                ("scalable vector graphics files","*.svg"), \
+                ("portable document format files","*.pdf"), \
+                ("post script files","*.ps")),
+                defaultextension="*.*")
+
+            if (askFileName):
+                GenMarkerImageCallback(askFileName, *args, **kwargs)
+
+        except Exception as e:
+            warnings.warn(str(e))
+            messagebox.showinfo("Error", "Save marker failed")
+            return
+
     def OnPreviewOrSaveCharucoMarker(self, askSave = False):
-        sizeX = None
         try:
             sizeX = int(self.charucoMarkerChessboardSizeXStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "sizeX is not valid")
-            return
-
-        sizeY = None
-        try:
             sizeY = int(self.charucoMarkerChessboardSizeYStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "sizeY is not valid")
-            return
-
-        squareLength = None
-        try:
             squareLength = float(self.charucoMarkerSquareLengthStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "squareLength is not valid")
-            return
-
-        markerLength = None
-        try:
             markerLength = float(self.charucoMarkerMarkerLengthStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markerLength is not valid")
-            return
-
-        borderBits = None
-        try:
             borderBits = int(self.charucoMarkerBorderBitsStr.get())
+            dictionary = self.charucoMarkerDictionaryStr.get()
+            subSizeX = int(self.charucoMarkerSaveSubSizeXStr.get())
+            subSizeY = int(self.charucoMarkerSaveSubSizeYStr.get())
+        except ValueError as e:
+            warnings.warn(str(e))
+            messagebox.showinfo("Error", "Enter invalid parameters")
+            return
         except Exception as e:
             warnings.warn(str(e))
-            messagebox.showinfo("Error", "borderBits is not valid")
+            messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        dictionary = self.charucoMarkerDictionaryStr.get()
-
-        # check
+        # Check
         if(sizeX <= 1):
             messagebox.showinfo("Error", "sizeX <= 1")
             return
@@ -112,7 +128,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "borderBits <= 0")
             return
 
-        #
+        # Preview
         try:
             tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewCharucoMarkerImage(dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
             self.charucoMarkerImageLabel.imgtk = tkImage
@@ -122,59 +138,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "create marker failed")
             return
 
+        # Save
         if(askSave):
-            subSizeX = None
-            try:
-                subSizeX = int(self.charucoMarkerSaveSubSizeXStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeX is not valid")
-                return
-
-            subSizeY = None
-            try:
-                subSizeY = int(self.charucoMarkerSaveSubSizeYStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeY is not valid")
-                return
-
-            # check
-            if(subSizeX < 0):
-                messagebox.showinfo("Error", "subSizeX < 0")
-                return
-
-            if(subSizeY < 0):
-                messagebox.showinfo("Error", "subSizeY < 0")
-                return
-
-            #
-            subSize = None
-
-            if(subSizeX > 0):
-                if(subSizeY > 0):
-                    subSize = (subSizeX, subSizeY)
-                else:
-                    subSize = (subSizeX, sizeY)
-            else:
-                if(subSizeY > 0):
-                    subSize = (sizeX, subSizeY)
-                else:
-                    subSize = None
-
-            try:
-                askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
-                    ("scalable vector graphics files","*.svg"), \
-                    ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps")),
-                    defaultextension="*.*")
-
-                if (askFileName):
-                    MarkerPrinter.GenCharucoMarkerImage(askFileName, dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize=subSize)
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "save marker failed")
-                return
+            MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenCharucoMarkerImage, \
+                dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize = (subSizeX, subSizeY))
 
     def OnPreviewCharucoMarker(self):
         self.OnPreviewOrSaveCharucoMarker(askSave = False)
@@ -250,57 +217,26 @@ class MarkerPrinterGUI:
         self.arucoGridMarkerDictionaryStr.set(pDictName)
 
     def OnPreviewOrSaveArucoGridMarker(self, askSave = False):
-        markersX = None
         try:
             markersX = int(self.arucoGridMarkerMarkersXStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markersX is not valid")
-            return
-
-        markersY = None
-        try:
             markersY = int(self.arucoGridMarkerMarkersYStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markersY is not valid")
-            return
-
-        markerLength = None
-        try:
             markerLength = float(self.arucoGridMarkerMarkerLengthStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markerLength is not valid")
-            return
-
-        markerSeparation = None
-        try:
             markerSeparation = float(self.arucoGridMarkerMarkerSeparationStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markerSeparation is not valid")
-            return
-
-        borderBits = None
-        try:
             borderBits = int(self.arucoGridMarkerBorderBitsStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "borderBits is not valid")
-            return
-
-        firstMarker = None
-        try:
             firstMarker = int(self.arucoGridMarkerFirstMarkerStr.get())
+            dictionary = self.charucoMarkerDictionaryStr.get()
+            subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
+            subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
+        except ValueError as e:
+            warnings.warn(str(e))
+            messagebox.showinfo("Error", "Enter invalid parameters")
+            return
         except Exception as e:
             warnings.warn(str(e))
-            messagebox.showinfo("Error", "firstMarker is not valid")
+            messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        dictionary = self.charucoMarkerDictionaryStr.get()
-
-        # check
+        # Check
         if(markersX <= 1):
             messagebox.showinfo("Error", "markersX <= 1")
             return
@@ -329,7 +265,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "borderBits <= 0")
             return
 
-        #
+        # Preview
         try:
             tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter)))))
             self.arucoGridMarkerImageLabel.imgtk = tkImage
@@ -339,59 +275,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "create marker failed")
             return
 
+        # Save
         if(askSave):
-            subSizeX = None
-            try:
-                subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeX is not valid")
-                return
-
-            subSizeY = None
-            try:
-                subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeY is not valid")
-                return
-
-            # check
-            if(subSizeX < 0):
-                messagebox.showinfo("Error", "subSizeX < 0")
-                return
-
-            if(subSizeY < 0):
-                messagebox.showinfo("Error", "subSizeY < 0")
-                return
-
-            #
-            subSize = None
-
-            if(subSizeX > 0):
-                if(subSizeY > 0):
-                    subSize = (subSizeX, subSizeY)
-                else:
-                    subSize = (subSizeX, sizeY)
-            else:
-                if(subSizeY > 0):
-                    subSize = (sizeX, subSizeY)
-                else:
-                    subSize = None
-
-            try:
-                askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
-                    ("scalable vector graphics files","*.svg"), \
-                    ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps")),
-                    defaultextension="*.*")
-
-                if (askFileName):
-                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize=subSize)
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "save marker failed")
-                return
+            MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenArucoGridMarkerImage, \
+                dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize = (subSizeX, subSizeY))
 
     def OnPreviewArucoGridMarker(self):
         self.OnPreviewOrSaveArucoGridMarker(askSave = False)
@@ -471,33 +358,21 @@ class MarkerPrinterGUI:
         self.arucoMarkerDictionaryStr.set(pDictName)
 
     def OnPreviewOrSaveArucoMarker(self, askSave = False):
-        markerID = None
         try:
             markerID = int(self.arucoMarkerMarkerIDStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markerID is not valid")
-            return
-
-        markerLength = None
-        try:
             markerLength = float(self.arucoMarkerMarkerLengthStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "markerLength is not valid")
-            return
-
-        borderBits = None
-        try:
             borderBits = int(self.arucoMarkerBorderBitsStr.get())
+            dictionary = self.charucoMarkerDictionaryStr.get()
+        except ValueError as e:
+            warnings.warn(str(e))
+            messagebox.showinfo("Error", "Enter invalid parameters")
+            return
         except Exception as e:
             warnings.warn(str(e))
-            messagebox.showinfo("Error", "borderBits is not valid")
+            messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        dictionary = self.charucoMarkerDictionaryStr.get()
-
-        # check
+        # Check
         if(markerID < 0):
             messagebox.showinfo("Error", "markerID < 0")
             return
@@ -514,7 +389,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "borderBits <= 0")
             return
 
-        #
+        # Preview
         try:
             tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoMarkerImage(dictionary, markerID, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(markerLength * MarkerPrinter.ptPerMeter), int(markerLength * MarkerPrinter.ptPerMeter)))))
             self.arucoMarkerImageLabel.imgtk = tkImage
@@ -524,20 +399,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "create marker failed")
             return
 
+        # Save
         if(askSave):
-            try:
-                askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
-                    ("scalable vector graphics files","*.svg"), \
-                    ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps")),
-                    defaultextension="*.*")
-
-                if (askFileName):
-                    MarkerPrinter.GenArucoMarkerImage(askFileName, dictionary, markerID, markerLength, borderBits=borderBits)
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "save marker failed")
-                return
+            MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenArucoMarkerImage, \
+                dictionary, markerID, markerLength, borderBits=borderBits)
 
     def OnPreviewArucoMarker(self):
         self.OnPreviewOrSaveArucoMarker(askSave = False)
@@ -587,31 +452,22 @@ class MarkerPrinterGUI:
         self.OnSelectArucoMarkerDictionary("DICT_ARUCO_ORIGINAL")
 
     def OnPreviewOrSaveChessMarker(self, askSave = False):
-        sizeX = None
         try:
             sizeX = int(self.chessMarkerChessboardSizeXStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "sizeX is not valid")
-            return
-
-        sizeY = None
-        try:
             sizeY = int(self.chessMarkerChessboardSizeYStr.get())
-        except Exception as e:
-            warnings.warn(str(e))
-            messagebox.showinfo("Error", "sizeY is not valid")
-            return
-
-        squareLength = None
-        try:
             squareLength = float(self.chessMarkerSquareLengthStr.get())
+            subSizeX = int(self.chessMarkerSaveSubSizeXStr.get())
+            subSizeY = int(self.chessMarkerSaveSubSizeYStr.get())
+        except ValueError as e:
+            warnings.warn(str(e))
+            messagebox.showinfo("Error", "Enter invalid parameters")
+            return
         except Exception as e:
             warnings.warn(str(e))
-            messagebox.showinfo("Error", "squareLength is not valid")
+            messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        # check
+        # Check
         if(sizeX <= 1):
             messagebox.showinfo("Error", "sizeX <= 1")
             return
@@ -624,7 +480,7 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "squareLength <= 0")
             return
 
-        #
+        # Preview
         try:
             tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewChessMarkerImage((sizeX, sizeY), squareLength, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
             self.chessMarkerImageLabel.imgtk = tkImage
@@ -634,59 +490,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "create marker failed")
             return
 
+        # Save
         if(askSave):
-            subSizeX = None
-            try:
-                subSizeX = int(self.chessMarkerSaveSubSizeXStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeX is not valid")
-                return
-
-            subSizeY = None
-            try:
-                subSizeY = int(self.chessMarkerSaveSubSizeYStr.get())
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "subSizeY is not valid")
-                return
-
-            # check
-            if(subSizeX < 0):
-                messagebox.showinfo("Error", "subSizeX < 0")
-                return
-
-            if(subSizeY < 0):
-                messagebox.showinfo("Error", "subSizeY < 0")
-                return
-
-            #
-            subSize = None
-
-            if(subSizeX > 0):
-                if(subSizeY > 0):
-                    subSize = (subSizeX, subSizeY)
-                else:
-                    subSize = (subSizeX, sizeY)
-            else:
-                if(subSizeY > 0):
-                    subSize = (sizeX, subSizeY)
-                else:
-                    subSize = None
-
-            try:
-                askFileName = filedialog.asksaveasfilename(initialdir = os.path.abspath("./"), title = "Output", filetypes = (\
-                    ("scalable vector graphics files","*.svg"), \
-                    ("portable document format files","*.pdf"), \
-                    ("post script files","*.ps")),
-                    defaultextension="*.*")
-
-                if (askFileName):
-                    MarkerPrinter.GenChessMarkerImage(askFileName, (sizeX, sizeY), squareLength, subSize=subSize)
-            except Exception as e:
-                warnings.warn(str(e))
-                messagebox.showinfo("Error", "save marker failed")
-                return
+            MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenChessMarkerImage, \
+                (sizeX, sizeY), squareLength, subSize = (subSizeX, subSizeY))
 
     def OnPreviewChessMarker(self):
         self.OnPreviewOrSaveChessMarker(askSave = False)
@@ -803,4 +610,4 @@ class MarkerPrinterGUI:
         MarkerPrinter.debugMode = None
 
 if __name__ == '__main__':
-    MarkerPrinterGUI()
+    MarkerPrinterGUI() 
