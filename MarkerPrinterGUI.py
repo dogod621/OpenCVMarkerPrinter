@@ -326,7 +326,7 @@ class MarkerPrinterGUI:
 
         #
         try:
-            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter)))))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter)))))
             self.arucoGridMarkerImageLabel.imgtk = tkImage
             self.arucoGridMarkerImageLabel.config(image=tkImage)
         except Exception as e:
@@ -383,7 +383,7 @@ class MarkerPrinterGUI:
                     defaultextension="*.*")
 
                 if (askFileName):
-                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, dictionary, (markersX, markersY), markerLength, markerSeparation, borderBits=borderBits, subSize=subSize)
+                    MarkerPrinter.GenArucoGridMarkerImage(askFileName, dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize=subSize)
             except Exception as e:
                 warnings.warn(str(e))
                 messagebox.showinfo("Error", "save marker failed")
