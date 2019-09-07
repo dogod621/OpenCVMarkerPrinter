@@ -17,6 +17,10 @@ This small app can save some commonly used opencv markers such as ArUco, ArUcoGr
 
 ## Tutorial
 #### GUI
+```
+python MarkerPrinterGUI.py
+```
+
 You can switch ArUco, ArUcoGrid, Chessboard and ChArUco mode at the GUI tab, then you can select dictionary from the GUI menu and modify board shape, marker size, border width... etc. at the GUI entry, finally click the preview or save button to show the marker image on the GUI window or save it to file.
 
 #### Command-Line
@@ -30,22 +34,22 @@ python MarkerPrinter.py
 python MarkerPrinter.py --list_dictionary
 ```
 
-#####Save chessboard
+##### Save chessboard
 ```
 python MarkerPrinter.py --chess --file "./chess.pdf" --size_x 16 --size_y 9 --square_length 0.09
 ```
 
-#####Save ArUco
+#####  ArUco
 ```
 python MarkerPrinter.py --aruco --file "./aruco.pdf" --dictionary DICT_ARUCO_ORIGINAL --marker_length 0.07 --marker_id 0 --border_bits 1
 ```
 
-#####Save ArUco Grid
+##### Save ArUco Grid
 ```
 python MarkerPrinter.py --aruco_grid --file "./aruco_grid.pdf" --dictionary DICT_ARUCO_ORIGINAL --size_x 16 --size_y 9 --marker_length 0.07 --marker_separation 0.02 --first_marker 0 --border_bits 1
 ```
 
-#####Save ChArUco Grid
+##### Save ChArUco Grid
 ```
 python MarkerPrinter.py --charuco --file "./charuco.pdf" --dictionary DICT_ARUCO_ORIGINAL --size_x 16 --size_y 9 --square_length 0.09 --marker_length 0.07 --border_bits 1
 ```
