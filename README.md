@@ -49,14 +49,14 @@ python MarkerPrinter.py --aruco --file "./aruco.pdf" --dictionary DICT_ARUCO_ORI
 python MarkerPrinter.py --aruco_grid --file "./aruco_grid.pdf" --dictionary DICT_ARUCO_ORIGINAL --size_x 16 --size_y 9 --marker_length 0.07 --marker_separation 0.02 --first_marker 0 --border_bits 1
 ```
 
-##### Save ChArUco Grid
+##### Save ChArUco
 ```
 python MarkerPrinter.py --charuco --file "./charuco.pdf" --dictionary DICT_ARUCO_ORIGINAL --size_x 16 --size_y 9 --square_length 0.09 --marker_length 0.07 --border_bits 1
 ```
 
 ## Useful Options:
 ### Divde output to chunks
-If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks.
+If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks. If you are using command-line interface, just add --subSizeX x --subSizeY y as parameters.
 
 ### Generate aruco data:
 Install opencv-python and opencv-contrib-python, and than run
