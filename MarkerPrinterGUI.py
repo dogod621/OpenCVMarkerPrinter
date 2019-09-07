@@ -158,7 +158,6 @@ class MarkerPrinterGUI:
         self.charucoMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.charucoMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
-        #
         self.charucoMarkerImageLabel = tk.Label(self.charucoMarkerImageTab)
         self.charucoMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
@@ -295,7 +294,6 @@ class MarkerPrinterGUI:
         self.arucoGridMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.arucoGridMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
-        #
         self.arucoGridMarkerImageLabel = tk.Label(self.arucoGridMarkerImageTab)
         self.arucoGridMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
@@ -419,7 +417,6 @@ class MarkerPrinterGUI:
         self.arucoMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.arucoMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
-        #
         self.arucoMarkerImageLabel = tk.Label(self.arucoMarkerImageTab)
         self.arucoMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
@@ -510,7 +507,6 @@ class MarkerPrinterGUI:
         self.chessMarkerImageTab.grid(row=1, column=0, sticky = tk.NSEW)
         self.chessMarkerUIFrame2.grid(row=2, column=0, sticky = tk.NSEW)
 
-        #
         self.chessMarkerImageLabel = tk.Label(self.chessMarkerImageTab)
         self.chessMarkerImageLabel.grid(row=0, column=0, sticky = tk.NSEW)
 
@@ -576,7 +572,6 @@ class MarkerPrinterGUI:
         self.helpMenu.add_command(label="CLOSE_DEBUG_MODE", command=self.On_CLOSE_DEBUG_MODE)
         self.window.config(menu=self.menu)
 
-        #
         self.charucoMarkerTab = ttk.Frame(self.notebook)
         self.arucoMarkerTab = ttk.Frame(self.notebook)
         self.arucoGridMarkerTab = ttk.Frame(self.notebook)
@@ -587,13 +582,11 @@ class MarkerPrinterGUI:
         self.notebook.add(self.arucoGridMarkerTab, text='ArUcoGrid Marker')
         self.notebook.add(self.chessMarkerTab, text='Chessboard Marker')
 
-        #
         self.InitCharucoMarkerTab()
         self.InitArucoMarkerTab()
         self.InitArucoGridMarkerTab()
         self.InitChessMarkerTab()
 
-        #
         self.Update()
         self.window.mainloop()
 

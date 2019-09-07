@@ -41,11 +41,15 @@ def SaveArucoDictBytesList(filePath = "arucoDictBytesList.npz"):
         for name, flag in dictInfo:
             arucoDict = aruco.Dictionary_get(flag)
             arucoDictBytesList[name] = arucoDict.bytesList
+
         np.savez_compressed(filePath, **arucoDictBytesList)
+        return arucoDictBytesList
 
     except Exception as e:
         warnings.warn(str(e))
-        return
+        return None
+
+    return None
 
 class MarkerPrinter:
 
@@ -61,7 +65,12 @@ class MarkerPrinter:
             ".PDF": cairo.PDFSurface,
             ".PS": cairo.PSSurface }
 
-    arucoDictBytesList = np.load("arucoDictBytesList.npz")
+    if (os.path.isfile("arucoDictBytesList.npz")):
+        arucoDictBytesList = np.load("arucoDictBytesList.npz")
+    else:
+        warnings.warn("Missing build-in arucoDictBytesList.npz, generate it again")
+        arucoDictBytesList = SaveArucoDictBytesList(filePath = "arucoDictBytesList.npz")
+
     arucoDictMarkerSize = \
         {
             "DICT_4X4_1000": 4,
@@ -291,7 +300,7 @@ class MarkerPrinter:
                             blockX = bx,
                             blockY = by,
                             mode = "CHESS"):
-                            warnings.warn("Failed draw marker")
+                            warnings.warn("Fail to draw marker")
                             return None
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
@@ -306,8 +315,9 @@ class MarkerPrinter:
         path, nameExt = os.path.split(filePath)
         name, ext = os.path.splitext(nameExt)
 
-        if not(os.path.isdir(path)):
-            os.makedirs(path)
+        if(len(path) > 0):
+            if not(os.path.isdir(path)):
+                os.makedirs(path)
 
         if((ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
             warnings.warn("file extention is not supported, should be: svg, ps, pdf")
@@ -346,7 +356,7 @@ class MarkerPrinter:
                         blockX = bx,
                         blockY = by,
                         mode = "CHESS" ):
-                        warnings.warn("Failed draw marker")
+                        warnings.warn("Fail to draw marker")
                         return False
 
         if(subSize is not None):
@@ -384,7 +394,7 @@ class MarkerPrinter:
                                     originX = subChessboardBlockX[subXID],
                                     originY = subChessboardBlockY[subYID],
                                     mode = "CHESS" ):
-                                    warnings.warn("Failed draw marker")
+                                    warnings.warn("Fail to draw marker")
                                     return False
 
         return True
@@ -404,7 +414,7 @@ class MarkerPrinter:
                     borderBits = borderBits,
                     firstMarkerID = markerID,
                     mode = "ARUCO"):
-                    warnings.warn("Failed draw marker")
+                    warnings.warn("Fail to draw marker")
                     return None
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
@@ -419,8 +429,9 @@ class MarkerPrinter:
         path, nameExt = os.path.split(filePath)
         name, ext = os.path.splitext(nameExt)
 
-        if not(os.path.isdir(path)):
-            os.makedirs(path)
+        if(len(path) > 0):
+            if not(os.path.isdir(path)):
+                os.makedirs(path)
 
         if((ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
             warnings.warn("file extention is not supported, should be: svg, ps, pdf")
@@ -437,7 +448,7 @@ class MarkerPrinter:
                 borderBits = borderBits,
                 firstMarkerID = markerID,
                 mode = "ARUCO"):
-                warnings.warn("Failed draw marker")
+                warnings.warn("Fail to draw marker")
                 return False
 
         return True
@@ -467,7 +478,7 @@ class MarkerPrinter:
                             blockX = bx,
                             blockY = by,
                             mode = "CHARUCO"):
-                            warnings.warn("Failed draw marker")
+                            warnings.warn("Fail to draw marker")
                             return False
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
@@ -483,8 +494,9 @@ class MarkerPrinter:
         path, nameExt = os.path.split(filePath)
         name, ext = os.path.splitext(nameExt)
 
-        if not(os.path.isdir(path)):
-            os.makedirs(path)
+        if(len(path) > 0):
+            if not(os.path.isdir(path)):
+                os.makedirs(path)
 
         if((ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
             warnings.warn("file extention is not supported, should be: svg, ps, pdf")
@@ -518,7 +530,7 @@ class MarkerPrinter:
                         blockX = bx,
                         blockY = by,
                         mode = "CHARUCO"):
-                        warnings.warn("Failed draw marker")
+                        warnings.warn("Fail to draw marker")
                         return False
 
         if(subSize is not None):
@@ -559,7 +571,7 @@ class MarkerPrinter:
                                     originX = subChessboardBlockX[subXID],
                                     originY = subChessboardBlockY[subYID],
                                     mode = "CHARUCO"):
-                                    warnings.warn("Failed draw marker")
+                                    warnings.warn("Fail to draw marker")
                                     return False
 
         return True
@@ -590,7 +602,7 @@ class MarkerPrinter:
                             blockX = bx,
                             blockY = by,
                             mode = "ARUCOGRID"):
-                            warnings.warn("Failed draw marker")
+                            warnings.warn("Fail to draw marker")
                             return False
 
             with open(os.path.join(tmpdirname, "tempSVG.svg")) as file:
@@ -606,8 +618,9 @@ class MarkerPrinter:
         path, nameExt = os.path.split(filePath)
         name, ext = os.path.splitext(nameExt)
 
-        if not(os.path.isdir(path)):
-            os.makedirs(path)
+        if(len(path) > 0):
+            if not(os.path.isdir(path)):
+                os.makedirs(path)
 
         if((ext.upper() != ".SVG") and (ext.upper() != ".PS") and (ext.upper() != ".PDF")):
             warnings.warn("file extention is not supported, should be: svg, ps, pdf")
@@ -646,7 +659,7 @@ class MarkerPrinter:
                         blockX = bx,
                         blockY = by,
                         mode = "ARUCOGRID"):
-                        warnings.warn("Failed draw marker")
+                        warnings.warn("Fail to draw marker")
                         return False
 
         if(subSize is not None):
@@ -691,16 +704,384 @@ class MarkerPrinter:
                                     originX = subChessboardBlockX[subXID],
                                     originY = subChessboardBlockY[subYID],
                                     mode = "ARUCOGRID"):
-                                    warnings.warn("Failed draw marker")
+                                    warnings.warn("Fail to draw marker")
                                     return False
 
         return True
 
 if __name__ == '__main__':
     parser = ArgumentParser()
+
+    # Save marker image parameters
+    chessGroup = parser.add_argument_group('chess', 'Chessboard')
+    arucoGroup = parser.add_argument_group('aruco', 'ArUco')
+    arucoGridGroup = parser.add_argument_group('aruco_grid', 'ArUco grid')
+    charucoGroup = parser.add_argument_group('charuco', 'ChArUco')
+    exclusiveGroup = parser.add_mutually_exclusive_group()
+
+    exclusiveGroup.add_argument(
+        "--chess", action='store_true', default=False,
+        help="Choose to save chessboard marker")
+
+    exclusiveGroup.add_argument(
+        "--aruco", action='store_true', default=False,
+        help="Choose to save ArUco marker")
+
+    exclusiveGroup.add_argument(
+        "--aruco_grid", action='store_true', default=False,
+        help="Choose to save ArUco grid marker")
+
+    exclusiveGroup.add_argument(
+        "--charuco", action='store_true', default=False,
+        help="Choose to save ChArUco marker")
+
+    # Utility functions parameters
+    exclusiveGroup.add_argument(
+        "--generate", dest="arucoDataFileName",
+        help="Generate aruco data to FILE", metavar="FILE")
+
+    exclusiveGroup.add_argument(
+        "--list_dictionary", action='store_true', default=False,
+        help="List predefined aruco dictionary")
+
+    # Parameters
+    # fileName
     parser.add_argument(
-        "-g", "--generate", dest="filename",
-        help="Generate aruco data FILE", metavar="FILE")
+        "--file", dest="fileName", default="./image.pdf",
+        help="Save marker image to FILE", metavar="FILE")
+    for group in [chessGroup, arucoGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_file", dest="fileName",
+            help="Save marker image to FILE", metavar="FILE")
+
+    # dictionary
+    parser.add_argument(
+        "--dictionary", dest="dictionary", default="DICT_ARUCO_ORIGINAL",
+        help="Generate marker via predefined DICTIONARY aruco dictionary", metavar="DICTIONARY")
+    for group in [arucoGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_dictionary", dest="dictionary",
+            help="Generate marker via predefined DICTIONARY aruco dictionary", metavar="DICTIONARY")
+
+    # size
+    parser.add_argument(
+        "--size_x", dest="sizeX", default="16",
+        help="Save marker image with N board width", metavar="N")
+    parser.add_argument(
+        "--size_y", dest="sizeY", default="9",
+        help="Save marker image with N board height", metavar="N")
+
+    for group in [chessGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_size_x", dest="sizeX",
+            help="Save marker image with N board width", metavar="N")
+        group.add_argument(
+            "--" + group.title + "_size_y", dest="sizeY",
+            help="Save marker image with N board height", metavar="N")
+
+    # length
+    parser.add_argument(
+        "--square_length", dest="squareLength", default="0.09",
+        help="Save marker image with L square length (Unit: meter)", metavar="L")
+    parser.add_argument(
+        "--marker_length", dest="markerLength", default="0.07",
+        help="Save marker image with L marker length (Unit: meter)", metavar="L")
+    parser.add_argument(
+        "--marker_separation", dest="markerSeparation", default="0.02",
+        help="Save marker image with L separation length (Unit: meter)", metavar="L")
+
+    for group in [chessGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_square_length", dest="squareLength",
+            help="Save marker image with L blocks length (Unit: meter)", metavar="L")
+
+    for group in [arucoGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_marker_length", dest="markerLength",
+            help="Save marker image with L marker length (Unit: meter)", metavar="L")
+
+    for group in [arucoGridGroup]:
+        group.add_argument(
+            "--" + group.title + "_marker_separation", dest="markerSeparation",
+            help="Save marker image with L gap length (Unit: meter)", metavar="L")
+
+    # else
+    parser.add_argument(
+        "--marker_id", dest="markerID", default="0",
+        help="Save marker image with ID marker", metavar="ID")
+    parser.add_argument(
+        "--first_marker", dest="firstMarker", default="0",
+        help="Save marker image that start with ID marker", metavar="ID")
+    parser.add_argument(
+        "--border_bits", dest="borderBits", default="1",
+        help="Save marker image with N border size", metavar="N")
+
+    for group in [arucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_marker_id", dest="markerID",
+            help="Save marker image with ID marker", metavar="ID")
+
+    for group in [arucoGridGroup]:
+        group.add_argument(
+            "--" + group.title + "_first_marker", dest="firstMarker",
+            help="Save marker image that start with ID marker", metavar="ID")
+
+    for group in [arucoGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_border_bits", dest="borderBits",
+            help="Save marker image with N border size", metavar="N")
+
+    # sub size
+    parser.add_argument(
+        "--sub_size_x", dest="subSizeX", default="0",
+        help="Save marker image with N chuck width", metavar="N")
+    parser.add_argument(
+        "--sub_size_y", dest="subSizeY", default="0",
+        help="Save marker image with N chuck height", metavar="N")
+
+    for group in [chessGroup, arucoGridGroup, charucoGroup]:
+        group.add_argument(
+            "--" + group.title + "_sub_size_x", dest="subSizeX",
+            help="Save marker image with N chuck width", metavar="N")
+        group.add_argument(
+            "--" + group.title + "_sub_size_y", dest="subSizeY",
+            help="Save marker image with N chuck height", metavar="N")
+
+    # Run
     args = parser.parse_args()
-    if(args.filename):
-        SaveArucoDictBytesList(args.filename)
+
+    if(args.arucoDataFileName is not None):
+        print("Generate aruco data to: " + args.arucoDataFileName)
+        SaveArucoDictBytesList(args.arucoDataFileName)
+
+    elif(args.list_dictionary):
+        print("List predefined aruco dictionary")
+        for i in MarkerPrinter.arucoDictBytesList.keys():
+            print(i)
+
+    elif(args.chess):
+        try:
+            sizeX = int(args.sizeX)
+            sizeY = int(args.sizeY)
+            squareLength = float(args.squareLength)
+            subSizeX = int(args.subSizeX)
+            subSizeY = int(args.subSizeY)
+        except ValueError as e:
+            warnings.warn(str(e))
+        else:
+            print("Save chessboard marker with parms: " + \
+                    str({ \
+                        "fileName": args.fileName, \
+                        "sizeX": sizeX, \
+                        "sizeY": sizeY, \
+                        "squareLength": squareLength, \
+                        "subSizeX": subSizeX, \
+                        "subSizeY": subSizeY, \
+                    }))
+
+            # Check
+            if(sizeX <= 1):
+                raise ValueError("sizeX <= 1")
+
+            if(sizeY <= 1):
+                raise ValueError("sizeY <= 1")
+
+            if(squareLength <= 0):
+                raise ValueError("squareLength <= 0")
+
+            if(subSizeX < 0):
+                raise ValueError("subSizeX < 0")
+
+            if(subSizeY < 0):
+                raise ValueError("subSizeY < 0")
+
+            subSize = None
+
+            if(subSizeX > 0):
+                if(subSizeY > 0):
+                    subSize = (subSizeX, subSizeY)
+                else:
+                    subSize = (subSizeX, sizeY)
+            else:
+                if(subSizeY > 0):
+                    subSize = (sizeX, subSizeY)
+                else:
+                    subSize = None
+
+            # Gen
+            MarkerPrinter.GenChessMarkerImage(args.fileName, (sizeX, sizeY), squareLength, subSize = subSize)
+
+    elif(args.aruco):
+        try:
+            markerLength = float(args.markerLength)
+            markerID = int(args.markerID)
+            borderBits = int(args.borderBits)
+        except ValueError as e:
+            warnings.warn(str(e))
+        else:
+            print("Save ArUco marker with parms: " + \
+                    str({ \
+                        "fileName": args.fileName, \
+                        "dictionary": args.dictionary, \
+                        "markerLength": markerLength, \
+                        "markerID": markerID, \
+                        "borderBits": borderBits, \
+                    }))
+
+            # Check
+            if(markerID < 0):
+                raise ValueError("markerID < 0")
+
+            if(markerLength <= 0):
+                raise ValueError("markerLength <= 0")
+
+            if(MarkerPrinter.arucoDictBytesList[args.dictionary].shape[0] <= markerID ):
+                raise ValueError("markerID is not in aruce dictionary")
+
+            if(borderBits <= 0):
+                raise ValueError("borderBits <= 0")
+
+            # Gen
+            MarkerPrinter.GenArucoMarkerImage(args.fileName, args.dictionary, markerID, markerLength, borderBits=borderBits)
+
+    elif(args.aruco_grid):
+        try:
+            sizeX = int(args.sizeX)
+            sizeY = int(args.sizeY)
+            markerLength = float(args.markerLength)
+            markerSeparation = float(args.markerSeparation)
+            firstMarker = int(args.firstMarker)
+            borderBits = int(args.borderBits)
+            subSizeX = int(args.subSizeX)
+            subSizeY = int(args.subSizeY)
+        except ValueError as e:
+            warnings.warn(str(e))
+        else:
+            print("Save ArUco grid marker with parms: " + \
+                    str({ \
+                        "fileName": args.fileName, \
+                        "dictionary": args.dictionary, \
+                        "sizeX": sizeX, \
+                        "sizeY": sizeY, \
+                        "markerLength": markerLength, \
+                        "markerSeparation": markerSeparation, \
+                        "firstMarker": firstMarker, \
+                        "borderBits": borderBits, \
+                        "subSizeX": subSizeX, \
+                        "subSizeY": subSizeY, \
+                    }))
+
+            # Check
+            if(sizeX <= 1):
+                raise ValueError("sizeX <= 1")
+
+            if(sizeY <= 1):
+                raise ValueError("sizeY <= 1")
+
+            if(markerLength <= 0):
+                raise ValueError("markerLength <= 0")
+
+            if(markerSeparation <= 0):
+                raise ValueError("markerSeparation <= 0")
+
+            if(firstMarker < 0):
+                raise ValueError("firstMarker < 0")
+
+            if(MarkerPrinter.arucoDictBytesList[args.dictionary].shape[0] < (( sizeX * sizeY ) + firstMarker)):
+                raise ValueError("aruce dictionary is not enough for your board size and firstMarker")
+
+            if(borderBits <= 0):
+                raise ValueError("borderBits <= 0")
+
+            if(subSizeX < 0):
+                raise ValueError("subSizeX < 0")
+
+            if(subSizeY < 0):
+                raise ValueError("subSizeY < 0")
+
+            subSize = None
+
+            if(subSizeX > 0):
+                if(subSizeY > 0):
+                    subSize = (subSizeX, subSizeY)
+                else:
+                    subSize = (subSizeX, sizeY)
+            else:
+                if(subSizeY > 0):
+                    subSize = (sizeX, subSizeY)
+                else:
+                    subSize = None
+
+            # Gen
+            MarkerPrinter.GenArucoGridMarkerImage(args.fileName, args.dictionary, (sizeX, sizeY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize=subSize)
+
+    elif(args.charuco):
+        try:
+            sizeX = int(args.sizeX)
+            sizeY = int(args.sizeY)
+            squareLength = float(args.squareLength)
+            markerLength = float(args.markerLength)
+            borderBits = int(args.borderBits)
+            subSizeX = int(args.subSizeX)
+            subSizeY = int(args.subSizeY)
+        except ValueError as e:
+            warnings.warn(str(e))
+        else:
+            print("Save ChArUco marker with parms: " + \
+                    str({ \
+                        "fileName": args.fileName, \
+                        "dictionary": args.dictionary, \
+                        "sizeX": sizeX, \
+                        "sizeY": sizeY, \
+                        "squareLength": squareLength, \
+                        "markerLength": markerLength, \
+                        "borderBits": borderBits, \
+                        "subSizeX": subSizeX, \
+                        "subSizeY": subSizeY, \
+                    }))
+
+            if(sizeX <= 1):
+                raise ValueError("sizeX <= 1")
+
+            if(sizeY <= 1):
+                raise ValueError("sizeY <= 1")
+
+            if(squareLength <= 0):
+                raise ValueError("squareLength <= 0")
+
+            if(markerLength <= 0):
+                raise ValueError("markerLength <= 0")
+
+            if(squareLength < markerLength):
+                raise ValueError("squareLength < markerLength")
+
+            if(MarkerPrinter.arucoDictBytesList[args.dictionary].shape[0] < (( sizeX * sizeY ) // 2)):
+                raise ValueError("aruce dictionary is not enough for your board size")
+
+            if(borderBits <= 0):
+                raise ValueError("borderBits <= 0")
+
+            if(subSizeX < 0):
+                raise ValueError("subSizeX < 0")
+
+            if(subSizeY < 0):
+                raise ValueError("subSizeY < 0")
+
+            subSize = None
+
+            if(subSizeX > 0):
+                if(subSizeY > 0):
+                    subSize = (subSizeX, subSizeY)
+                else:
+                    subSize = (subSizeX, sizeY)
+            else:
+                if(subSizeY > 0):
+                    subSize = (sizeX, subSizeY)
+                else:
+                    subSize = None
+
+            # Gen
+            MarkerPrinter.GenCharucoMarkerImage(args.fileName, args.dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize=subSize)
+
+    else:
+        parser.print_help()
