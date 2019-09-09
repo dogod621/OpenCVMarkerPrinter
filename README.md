@@ -56,7 +56,10 @@ python MarkerPrinter.py --charuco --file "./charuco.pdf" --dictionary DICT_ARUCO
 
 ## Useful Options:
 ### Divde output to chunks
-If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks. If you are using command-line interface, just add --subSizeX x --subSizeY y as parameters.
+If you are using consumer level printer, you will suffer from not able printing too large marker, so just set chunks shape at the GUI subSize entry before saving the marker to files, it will divide output marker to chunks. If you are using command-line interface, just add --sub_size_x x --sub_size_y y as parameters.
+
+### Page border
+If you are printing the image directly, you will need add page border to protect the marker, so just set page border at the GUI pageBorder entry before saving the marker to files. If you are using command-line interface, just add --page_border_x x --page_border_y y as parameters.
 
 ### Generate aruco data:
 Install opencv-python and opencv-contrib-python, and than run

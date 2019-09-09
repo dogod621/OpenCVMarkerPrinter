@@ -19,7 +19,6 @@ class MarkerPrinterGUI:
     def VisDPI(self, shape):
         scale0 = float(self.displayShape[0]) / float(shape[0])
         scale1 = float(self.displayShape[1]) / float(shape[1])
-
         if(scale0 > scale1):
             return scale1 * 96.0
         else:
@@ -42,15 +41,6 @@ class MarkerPrinterGUI:
 
         if(kwargs.get("subSize",None) is not None):
             subSizeX, subSizeY = kwargs["subSize"]
-
-            # Check
-            if(subSizeX < 0):
-                messagebox.showinfo("Error", "subSizeX < 0")
-                return
-
-            if(subSizeY < 0):
-                messagebox.showinfo("Error", "subSizeY < 0")
-                return
 
             kwargs["subSize"] = None
 
@@ -90,6 +80,8 @@ class MarkerPrinterGUI:
             dictionary = self.charucoMarkerDictionaryStr.get()
             subSizeX = int(self.charucoMarkerSaveSubSizeXStr.get())
             subSizeY = int(self.charucoMarkerSaveSubSizeYStr.get())
+            pageBorderX = float(self.charucoMarkerSavePageBorderXStr.get())
+            pageBorderY = float(self.charucoMarkerSavePageBorderYStr.get())
         except ValueError as e:
             warnings.warn(str(e))
             messagebox.showinfo("Error", "Enter invalid parameters")
@@ -99,38 +91,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        # Check
-        if(sizeX <= 1):
-            messagebox.showinfo("Error", "sizeX <= 1")
-            return
-
-        if(sizeY <= 1):
-            messagebox.showinfo("Error", "sizeY <= 1")
-            return
-
-        if(squareLength <= 0):
-            messagebox.showinfo("Error", "squareLength <= 0")
-            return
-
-        if(markerLength <= 0):
-            messagebox.showinfo("Error", "markerLength <= 0")
-            return
-
-        if(squareLength < markerLength):
-            messagebox.showinfo("Error", "squareLength < markerLength")
-            return
-
-        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] < (( sizeX * sizeY ) // 2)):
-            messagebox.showinfo("Error", "aruce dictionary is not enough for your board size")
-            return
-
-        if(borderBits <= 0):
-            messagebox.showinfo("Error", "borderBits <= 0")
-            return
-
         # Preview
         try:
-            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewCharucoMarkerImage(dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
+            dpi = self.VisDPI(((sizeY * squareLength + pageBorderY * 2) * MarkerPrinter.ptPerMeter, (sizeX * squareLength + pageBorderX * 2) * MarkerPrinter.ptPerMeter))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewCharucoMarkerImage(dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, pageBorder = (pageBorderX, pageBorderY), dpi=dpi))
             self.charucoMarkerImageLabel.imgtk = tkImage
             self.charucoMarkerImageLabel.config(image=tkImage)
         except Exception as e:
@@ -141,7 +105,7 @@ class MarkerPrinterGUI:
         # Save
         if(askSave):
             MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenCharucoMarkerImage, \
-                dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize = (subSizeX, subSizeY))
+                dictionary, (sizeX, sizeY), squareLength, markerLength, borderBits=borderBits, subSize = (subSizeX, subSizeY), pageBorder = (pageBorderX, pageBorderY))
 
     def OnPreviewCharucoMarker(self):
         self.OnPreviewOrSaveCharucoMarker(askSave = False)
@@ -197,14 +161,24 @@ class MarkerPrinterGUI:
         tk.Label(self.charucoMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
         tk.Label(self.charucoMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="pageBorderX (Unit: Meter)").grid(row=0, column=5, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="pageBorderY (Unit: Meter)").grid(row=0, column=6, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="Border or page").grid(row=2, column=5, sticky = tk.NSEW)
+        tk.Label(self.charucoMarkerUIFrame2, text="Border or page").grid(row=2, column=6, sticky = tk.NSEW)
 
         self.charucoMarkerSaveSubSizeXStr = tk.StringVar()
         self.charucoMarkerSaveSubSizeXStr.set("0")
         self.charucoMarkerSaveSubSizeYStr = tk.StringVar()
         self.charucoMarkerSaveSubSizeYStr.set("0")
+        self.charucoMarkerSavePageBorderXStr = tk.StringVar()
+        self.charucoMarkerSavePageBorderXStr.set("0.02")
+        self.charucoMarkerSavePageBorderYStr = tk.StringVar()
+        self.charucoMarkerSavePageBorderYStr.set("0.02")
 
         tk.Entry(self.charucoMarkerUIFrame2, textvariable=self.charucoMarkerSaveSubSizeXStr).grid(row=1, column=3, sticky = tk.NSEW)
         tk.Entry(self.charucoMarkerUIFrame2, textvariable=self.charucoMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
+        tk.Entry(self.charucoMarkerUIFrame2, textvariable=self.charucoMarkerSavePageBorderXStr).grid(row=1, column=5, sticky = tk.NSEW)
+        tk.Entry(self.charucoMarkerUIFrame2, textvariable=self.charucoMarkerSavePageBorderYStr).grid(row=1, column=6, sticky = tk.NSEW)
 
         self.charucoMarkerDictionaryMenue['menu'].delete(0, 'end')
         for dictName in self.dictList:
@@ -226,6 +200,8 @@ class MarkerPrinterGUI:
             dictionary = self.arucoGridMarkerDictionaryStr.get()
             subSizeX = int(self.arucoGridMarkerSaveSubSizeXStr.get())
             subSizeY = int(self.arucoGridMarkerSaveSubSizeYStr.get())
+            pageBorderX = float(self.arucoGridMarkerSavePageBorderXStr.get())
+            pageBorderY = float(self.arucoGridMarkerSavePageBorderYStr.get())
         except ValueError as e:
             warnings.warn(str(e))
             messagebox.showinfo("Error", "Enter invalid parameters")
@@ -235,38 +211,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        # Check
-        if(markersX <= 1):
-            messagebox.showinfo("Error", "markersX <= 1")
-            return
-
-        if(markersY <= 1):
-            messagebox.showinfo("Error", "markersY <= 1")
-            return
-
-        if(markerLength <= 0):
-            messagebox.showinfo("Error", "markerLength <= 0")
-            return
-
-        if(markerSeparation <= 0):
-            messagebox.showinfo("Error", "markerSeparation <= 0")
-            return
-
-        if(firstMarker < 0):
-            messagebox.showinfo("Error", "firstMarker < 0")
-            return
-
-        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] < (( markersX * markersY ) + firstMarker)):
-            messagebox.showinfo("Error", "aruce dictionary is not enough for your board size and firstMarker")
-            return
-
-        if(borderBits <= 0):
-            messagebox.showinfo("Error", "borderBits <= 0")
-            return
-
         # Preview
         try:
-            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, dpi=self.VisDPI((int((markersY * markerLength + (markersY  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter), int((markersX * markerLength + (markersX  - 1) * markerSeparation) * MarkerPrinter.ptPerMeter)))))
+            dpi=self.VisDPI(((markersY * markerLength + (markersY  - 1) * markerSeparation + pageBorderY * 2) * MarkerPrinter.ptPerMeter, (markersX * markerLength + (markersX  - 1) * markerSeparation + pageBorderX * 2) * MarkerPrinter.ptPerMeter))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoGridMarkerImage(dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, pageBorder = (pageBorderX, pageBorderY), dpi=dpi))
             self.arucoGridMarkerImageLabel.imgtk = tkImage
             self.arucoGridMarkerImageLabel.config(image=tkImage)
         except Exception as e:
@@ -277,7 +225,7 @@ class MarkerPrinterGUI:
         # Save
         if(askSave):
             MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenArucoGridMarkerImage, \
-                dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize = (subSizeX, subSizeY))
+                dictionary, (markersX, markersY), markerLength, markerSeparation, firstMarker, borderBits=borderBits, subSize = (subSizeX, subSizeY), pageBorder = (pageBorderX, pageBorderY))
 
     def OnPreviewArucoGridMarker(self):
         self.OnPreviewOrSaveArucoGridMarker(askSave = False)
@@ -337,14 +285,24 @@ class MarkerPrinterGUI:
         tk.Label(self.arucoGridMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
         tk.Label(self.arucoGridMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
         tk.Label(self.arucoGridMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="pageBorderX (Unit: Meter)").grid(row=0, column=5, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="pageBorderY (Unit: Meter)").grid(row=0, column=6, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="Border or page").grid(row=2, column=5, sticky = tk.NSEW)
+        tk.Label(self.arucoGridMarkerUIFrame2, text="Border or page").grid(row=2, column=6, sticky = tk.NSEW)
 
         self.arucoGridMarkerSaveSubSizeXStr = tk.StringVar()
         self.arucoGridMarkerSaveSubSizeXStr.set("0")
         self.arucoGridMarkerSaveSubSizeYStr = tk.StringVar()
         self.arucoGridMarkerSaveSubSizeYStr.set("0")
+        self.arucoGridMarkerSavePageBorderXStr = tk.StringVar()
+        self.arucoGridMarkerSavePageBorderXStr.set("0.02")
+        self.arucoGridMarkerSavePageBorderYStr = tk.StringVar()
+        self.arucoGridMarkerSavePageBorderYStr.set("0.02")
 
         tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSaveSubSizeXStr).grid(row=1, column=3, sticky = tk.NSEW)
         tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSavePageBorderXStr).grid(row=1, column=5, sticky = tk.NSEW)
+        tk.Entry(self.arucoGridMarkerUIFrame2, textvariable=self.arucoGridMarkerSavePageBorderYStr).grid(row=1, column=6, sticky = tk.NSEW)
 
         self.arucoGridMarkerDictionaryMenue['menu'].delete(0, 'end')
         for dictName in self.dictList:
@@ -361,6 +319,8 @@ class MarkerPrinterGUI:
             markerLength = float(self.arucoMarkerMarkerLengthStr.get())
             borderBits = int(self.arucoMarkerBorderBitsStr.get())
             dictionary = self.arucoMarkerDictionaryStr.get()
+            pageBorderX = float(self.arucoMarkerSavePageBorderXStr.get())
+            pageBorderY = float(self.arucoMarkerSavePageBorderYStr.get())
         except ValueError as e:
             warnings.warn(str(e))
             messagebox.showinfo("Error", "Enter invalid parameters")
@@ -370,26 +330,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        # Check
-        if(markerID < 0):
-            messagebox.showinfo("Error", "markerID < 0")
-            return
-
-        if(markerLength <= 0):
-            messagebox.showinfo("Error", "markerLength <= 0")
-            return
-
-        if(MarkerPrinter.arucoDictBytesList[dictionary].shape[0] <= markerID ):
-            messagebox.showinfo("Error", "markerID is not in aruce dictionary")
-            return
-
-        if(borderBits <= 0):
-            messagebox.showinfo("Error", "borderBits <= 0")
-            return
-
         # Preview
         try:
-            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoMarkerImage(dictionary, markerID, markerLength, borderBits=borderBits, dpi=self.VisDPI((int(markerLength * MarkerPrinter.ptPerMeter), int(markerLength * MarkerPrinter.ptPerMeter)))))
+            dpi=self.VisDPI(((markerLength  + pageBorderY * 2) * MarkerPrinter.ptPerMeter, (markerLength + pageBorderX * 2) * MarkerPrinter.ptPerMeter))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewArucoMarkerImage(dictionary, markerID, markerLength, borderBits=borderBits, pageBorder = (pageBorderX, pageBorderY), dpi=dpi))
             self.arucoMarkerImageLabel.imgtk = tkImage
             self.arucoMarkerImageLabel.config(image=tkImage)
         except Exception as e:
@@ -400,7 +344,7 @@ class MarkerPrinterGUI:
         # Save
         if(askSave):
             MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenArucoMarkerImage, \
-                dictionary, markerID, markerLength, borderBits=borderBits)
+                dictionary, markerID, markerLength, borderBits=borderBits, pageBorder = (pageBorderX, pageBorderY))
 
     def OnPreviewArucoMarker(self):
         self.OnPreviewOrSaveArucoMarker(askSave = False)
@@ -442,6 +386,21 @@ class MarkerPrinterGUI:
         tk.Button(self.arucoMarkerUIFrame2, text = "Preview", command = self.OnPreviewArucoMarker).grid(row=0, column=0, sticky = tk.NSEW)
         tk.Button(self.arucoMarkerUIFrame2, text = "Save", command = self.OnSaveArucoMarker).grid(row=0, column=1, sticky = tk.NSEW)
 
+        tk.Label(self.arucoMarkerUIFrame2, text="Save opetions:").grid(row=0, column=2, sticky = tk.NSEW)
+        tk.Label(self.arucoMarkerUIFrame2, text="(set 0 as disable)").grid(row=1, column=2, sticky = tk.NSEW)
+        tk.Label(self.arucoMarkerUIFrame2, text="pageBorderX (Unit: Meter)").grid(row=0, column=3, sticky = tk.NSEW)
+        tk.Label(self.arucoMarkerUIFrame2, text="pageBorderY (Unit: Meter)").grid(row=0, column=4, sticky = tk.NSEW)
+        tk.Label(self.arucoMarkerUIFrame2, text="Border or page").grid(row=2, column=3, sticky = tk.NSEW)
+        tk.Label(self.arucoMarkerUIFrame2, text="Border or page").grid(row=2, column=4, sticky = tk.NSEW)
+
+        self.arucoMarkerSavePageBorderXStr = tk.StringVar()
+        self.arucoMarkerSavePageBorderXStr.set("0.02")
+        self.arucoMarkerSavePageBorderYStr = tk.StringVar()
+        self.arucoMarkerSavePageBorderYStr.set("0.02")
+
+        tk.Entry(self.arucoMarkerUIFrame2, textvariable=self.arucoMarkerSavePageBorderXStr).grid(row=1, column=3, sticky = tk.NSEW)
+        tk.Entry(self.arucoMarkerUIFrame2, textvariable=self.arucoMarkerSavePageBorderYStr).grid(row=1, column=4, sticky = tk.NSEW)
+
         self.arucoMarkerDictionaryMenue['menu'].delete(0, 'end')
         for dictName in self.dictList:
             self.arucoMarkerDictionaryMenue['menu'].add_command(label=dictName, command=tk._setit(self.arucoMarkerDictionaryStr, dictName, self.OnSelectArucoMarkerDictionary))
@@ -455,6 +414,8 @@ class MarkerPrinterGUI:
             squareLength = float(self.chessMarkerSquareLengthStr.get())
             subSizeX = int(self.chessMarkerSaveSubSizeXStr.get())
             subSizeY = int(self.chessMarkerSaveSubSizeYStr.get())
+            pageBorderX = float(self.chessMarkerSavePageBorderXStr.get())
+            pageBorderY = float(self.chessMarkerSavePageBorderYStr.get())
         except ValueError as e:
             warnings.warn(str(e))
             messagebox.showinfo("Error", "Enter invalid parameters")
@@ -464,22 +425,10 @@ class MarkerPrinterGUI:
             messagebox.showinfo("Error", "Fail to get parameters")
             return
 
-        # Check
-        if(sizeX <= 1):
-            messagebox.showinfo("Error", "sizeX <= 1")
-            return
-
-        if(sizeY <= 1):
-            messagebox.showinfo("Error", "sizeY <= 1")
-            return
-
-        if(squareLength <= 0):
-            messagebox.showinfo("Error", "squareLength <= 0")
-            return
-
         # Preview
         try:
-            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewChessMarkerImage((sizeX, sizeY), squareLength, dpi=self.VisDPI((int(sizeY * squareLength * MarkerPrinter.ptPerMeter), int(sizeX * squareLength * MarkerPrinter.ptPerMeter)))))
+            dpi=self.VisDPI(((sizeY * squareLength + pageBorderY * 2) * MarkerPrinter.ptPerMeter, (sizeX * squareLength + pageBorderX * 2) * MarkerPrinter.ptPerMeter))
+            tkImage = PIL.ImageTk.PhotoImage(image = MarkerPrinter.PreviewChessMarkerImage((sizeX, sizeY), squareLength, pageBorder = (pageBorderX, pageBorderY), dpi=dpi))
             self.chessMarkerImageLabel.imgtk = tkImage
             self.chessMarkerImageLabel.config(image=tkImage)
         except Exception as e:
@@ -490,7 +439,7 @@ class MarkerPrinterGUI:
         # Save
         if(askSave):
             MarkerPrinterGUI.__SaveMarker(MarkerPrinter.GenChessMarkerImage, \
-                (sizeX, sizeY), squareLength, subSize = (subSizeX, subSizeY))
+                (sizeX, sizeY), squareLength, subSize = (subSizeX, subSizeY), pageBorder = (pageBorderX, pageBorderY))
 
     def OnPreviewChessMarker(self):
         self.OnPreviewOrSaveChessMarker(askSave = False)
@@ -534,20 +483,30 @@ class MarkerPrinterGUI:
         tk.Label(self.chessMarkerUIFrame2, text="subSizeY").grid(row=0, column=4, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame2, text="Divide to chunks, chunk sizeX").grid(row=2, column=3, sticky = tk.NSEW)
         tk.Label(self.chessMarkerUIFrame2, text="Divide to chunks, chunk sizeY").grid(row=2, column=4, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="pageBorderX (Unit: Meter)").grid(row=0, column=5, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="pageBorderY (Unit: Meter)").grid(row=0, column=6, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="Border or page").grid(row=2, column=5, sticky = tk.NSEW)
+        tk.Label(self.chessMarkerUIFrame2, text="Border or page").grid(row=2, column=6, sticky = tk.NSEW)
 
         self.chessMarkerSaveSubSizeXStr = tk.StringVar()
         self.chessMarkerSaveSubSizeXStr.set("0")
         self.chessMarkerSaveSubSizeYStr = tk.StringVar()
         self.chessMarkerSaveSubSizeYStr.set("0")
+        self.chessMarkerSavePageBorderXStr = tk.StringVar()
+        self.chessMarkerSavePageBorderXStr.set("0.02")
+        self.chessMarkerSavePageBorderYStr = tk.StringVar()
+        self.chessMarkerSavePageBorderYStr.set("0.02")
 
         tk.Entry(self.chessMarkerUIFrame2, textvariable=self.chessMarkerSaveSubSizeXStr).grid(row=1, column=3, sticky = tk.NSEW)
         tk.Entry(self.chessMarkerUIFrame2, textvariable=self.chessMarkerSaveSubSizeYStr).grid(row=1, column=4, sticky = tk.NSEW)
+        tk.Entry(self.chessMarkerUIFrame2, textvariable=self.chessMarkerSavePageBorderXStr).grid(row=1, column=5, sticky = tk.NSEW)
+        tk.Entry(self.chessMarkerUIFrame2, textvariable=self.chessMarkerSavePageBorderYStr).grid(row=1, column=6, sticky = tk.NSEW)
 
     def Update(self):
         time.sleep(0)
         self.window.after(self.delay, self.Update)
 
-    def __init__(self, pDelay=15, pDisplayShape=(int(400), int(600))):
+    def __init__(self, pDelay=15, pDisplayShape=(int(400), int(1200))):
         self.delay = pDelay
         self.displayShape = pDisplayShape
 
